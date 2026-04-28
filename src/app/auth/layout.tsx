@@ -10,7 +10,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       `}</style>
       <div style={{width:'100%',maxWidth:440}}>
         <div style={{textAlign:'center',marginBottom:48}}>
-          <a href=/ style={{fontFamily:"'Playfair Display',serif",fontSize:26,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
+          <a href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:26,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
             Portfolio<span style={{color:'#c9a96e'}}>AI</span>
           </a>
           <div style={{width:1,height:40,background:'linear-gradient(to bottom,rgba(201,169,110,.4),transparent)',margin:'20px auto 0'}}/>
