@@ -1,9 +1,21 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 
 export default function PricingPage() {
+  const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
+  const [checking, setChecking] = useState(true)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) router.push('/auth/login?redirect=/pricing')
+      else setChecking(false)
+    })
+  }, [])
 
   async function handleUpgrade(plan: string) {
     setLoading(plan)
@@ -16,11 +28,15 @@ export default function PricingPage() {
       const data = await res.json()
       if (data.url) window.location.href = data.url
       else alert(data.error || 'Something went wrong')
-    } catch {
-      alert('Something went wrong')
-    }
+    } catch { alert('Something went wrong') }
     setLoading(null)
   }
+
+  if (checking) return (
+    <div style={{minHeight:'100vh',background:'#0c0a08',display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <div style={{fontFamily:"'DM Sans',sans-serif",color:'rgba(245,240,232,.3)',fontSize:14}}>Loading...</div>
+    </div>
+  )
 
   return (
     <div style={{minHeight:'100vh',background:'#0c0a08',color:'#f5f0e8'}}>
@@ -50,7 +66,6 @@ export default function PricingPage() {
       </nav>
 
       <div style={{maxWidth:1100,margin:'0 auto',padding:'100px 72px'}}>
-        
         <div style={{textAlign:'center',marginBottom:80}}>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.18em',textTransform:'uppercase',color:'#c9a96e',marginBottom:20,display:'flex',alignItems:'center',justifyContent:'center',gap:12}}>
             <span style={{width:32,height:1,background:'rgba(201,169,110,.4)',display:'block'}}/>
@@ -66,8 +81,6 @@ export default function PricingPage() {
         </div>
 
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20}}>
-          
-          {/* FREE */}
           <div className="plan">
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:20}}>Free</div>
             <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#f5f0e8',lineHeight:1,marginBottom:8}}>Free</div>
@@ -81,11 +94,10 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* PRO */}
           <div className="plan plan-gold">
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:10,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',background:'rgba(12,10,8,.15)',color:'rgba(12,10,8,.5)',padding:'5px 12px',borderRadius:2,display:'inline-block',marginBottom:20}}>Most popular</div>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(12,10,8,.4)',marginBottom:16}}>Pro</div>
-            <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#0c0a08',lineHeight:1,marginBottom:8}}>$12</div>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#0c0a08',lineHeight:1,marginBottom:8}}>$11.99</div>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(12,10,8,.45)',marginBottom:40,fontWeight:300}}>per month — cancel anytime</div>
             <div style={{height:1,background:'rgba(12,10,8,.12)',marginBottom:32}}/>
             {['3 portfolio websites','Custom domain','No PortfolioAI branding','Portfolio analytics','Priority AI generation','Email support'].map((f,i) => (
@@ -93,15 +105,14 @@ export default function PricingPage() {
             ))}
             <div style={{marginTop:32}}>
               <button onClick={() => handleUpgrade('pro')} disabled={loading === 'pro'} className="btn btn-dark">
-                {loading === 'pro' ? 'Loading...' : 'Start Pro — $12/mo'}
+                {loading === 'pro' ? 'Loading...' : 'Start Pro — $11.99/mo'}
               </button>
             </div>
           </div>
 
-          {/* TEAM */}
           <div className="plan">
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:20}}>Team</div>
-            <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#f5f0e8',lineHeight:1,marginBottom:8}}>$49</div>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#f5f0e8',lineHeight:1,marginBottom:8}}>$48.99</div>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(245,240,232,.28)',marginBottom:40,fontWeight:300}}>per month</div>
             <div style={{height:1,background:'rgba(245,240,232,.07)',marginBottom:32}}/>
             {['Unlimited portfolios','White label','Custom domain','API access','Recruiter dashboard','Bulk generation','Priority support'].map((f,i) => (
@@ -109,11 +120,10 @@ export default function PricingPage() {
             ))}
             <div style={{marginTop:32}}>
               <button onClick={() => handleUpgrade('team')} disabled={loading === 'team'} className="btn btn-gold">
-                {loading === 'team' ? 'Loading...' : 'Start Team — $49/mo'}
+                {loading === 'team' ? 'Loading...' : 'Start Team — $48.99/mo'}
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
