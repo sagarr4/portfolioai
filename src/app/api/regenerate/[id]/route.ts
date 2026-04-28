@@ -18,11 +18,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   try {
     const parsed = portfolio.portfolio_data
     const htmlContent = await generatePortfolioHTML(parsed)
-
     await supabase.from('portfolios')
       .update({ html_content: htmlContent, is_published: false })
       .eq('id', id)
-
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('Regen error:', err)

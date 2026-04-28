@@ -1,14 +1,14 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
-export async function GET(request, { params }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   return publish(request, params)
 }
-export async function POST(request, { params }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   return publish(request, params)
 }
 
-async function publish(request, params) {
+async function publish(request: Request, params: Promise<{ id: string }>) {
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
