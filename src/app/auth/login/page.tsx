@@ -1,15 +1,13 @@
 'use client'
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
-import { Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [focus, setFocus] = useState('')
   const [form, setForm] = useState({ email: '', password: '' })
 
   async function handleSubmit(e: React.FormEvent) {
@@ -21,37 +19,126 @@ export default function LoginPage() {
       password: form.password,
     })
     if (error) { toast.error(error.message); setLoading(false); return }
-    toast.success('Welcome back!')
+    toast.success('Welcome back')
+    router.refresh()
     router.push('/dashboard')
   }
 
+  const inputStyle = (field: string) => ({
+    width: '100%',
+    padding: '13px 16px',
+    background: '#0c0a08',
+    border: `1px solid ${focus === field ? 'rgba(201,169,110,.5)' : 'rgba(245,240,232,.1)'}`,
+    borderRadius: 3,
+    color: '#f5f0e8',
+    fontSize: 14,
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: 400,
+    transition: 'border-color .2s',
+    outline: 'none',
+  })
+
   return (
     <>
-      <h2 className="text-xl font-semibold text-white mb-6">Welcome back</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div style={{ marginBottom: 32 }}>
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 26,
+          fontWeight: 700,
+          color: '#f5f0e8',
+          letterSpacing: '-.03em',
+          marginBottom: 8,
+          lineHeight: 1.1
+        }}>Welcome back</h1>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 14,
+          color: 'rgba(245,240,232,.35)',
+          fontWeight: 300
+        }}>Sign in to your PortfolioAI account</p>
+      </div>
+
+      <div style={{
+        width: '100%',
+        height: 1,
+        background: 'linear-gradient(90deg, transparent, rgba(201,169,110,.3), transparent)',
+        marginBottom: 32
+      }} />
+
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
-          <label className="block text-sm text-purple-200 mb-1">Email</label>
-          <input type="email" required value={form.email}
+          <label style={{
+            display: 'block',
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: '.12em',
+            textTransform: 'uppercase' as const,
+            color: 'rgba(245,240,232,.35)',
+            marginBottom: 8
+          }}>Email address</label>
+          <input
+            type="email" required value={form.email}
+            placeholder="jane@example.com"
+            onFocus={() => setFocus('email')}
+            onBlur={() => setFocus('')}
             onChange={e => setForm({ ...form, email: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400"
-            placeholder="jane@example.com" />
+            style={inputStyle('email')}
+          />
         </div>
         <div>
-          <label className="block text-sm text-purple-200 mb-1">Password</label>
-          <input type="password" required value={form.password}
+          <label style={{
+            display: 'block',
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: '.12em',
+            textTransform: 'uppercase' as const,
+            color: 'rgba(245,240,232,.35)',
+            marginBottom: 8
+          }}>Password</label>
+          <input
+            type="password" required value={form.password}
+            placeholder="Your password"
+            onFocus={() => setFocus('pass')}
+            onBlur={() => setFocus('')}
             onChange={e => setForm({ ...form, password: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-400"
-            placeholder="Your password" />
+            style={inputStyle('pass')}
+          />
         </div>
-        <button type="submit" disabled={loading}
-          className="w-full py-2.5 px-4 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
-          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            width: '100%',
+            padding: '14px 24px',
+            background: loading ? '#a08855' : '#c9a96e',
+            color: '#0c0a08',
+            border: 'none',
+            borderRadius: 3,
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 14,
+            fontWeight: 600,
+            letterSpacing: '.03em',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            transition: 'all .25s',
+            marginTop: 8
+          }}
+        >
           {loading ? 'Signing in...' : 'Sign in'}
         </button>
       </form>
-      <p className="text-center text-purple-300 text-sm mt-6">
+
+      <p style={{
+        textAlign: 'center',
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 13,
+        color: 'rgba(245,240,232,.3)',
+        marginTop: 28,
+        fontWeight: 300
+      }}>
         No account yet?{' '}
-        <Link href="/auth/signup" className="text-white font-medium hover:underline">Sign up free</Link>
+        <a href="/auth/signup" style={{ color: '#c9a96e', fontWeight: 500 }}>Create one free</a>
       </p>
     </>
   )
