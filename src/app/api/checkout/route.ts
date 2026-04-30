@@ -7,23 +7,25 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { plan } = await request.json()
-  const priceId = plan === 'team' 
-    ? process.env.STRIPE_TEAM_PRICE_ID 
-    : process.env.STRIPE_PRO_PRICE_ID
+  const { type, portfolio_id } = await request.json()
 
-  const { data: profile } = await supabase
-    .from('profiles').select('stripe_customer_id').eq('id', user.id).single()
+  const priceMap: Record<string, string> = {
+    launch: process.env.STRIPE_LAUNCH_PRICE_ID!,
+    regen: process.env.STRIPE_REGEN_PRICE_ID!,
+    bundle: process.env.STRIPE_BUNDLE_PRICE_ID!,
+  }
+
+  const priceId = priceMap[type]
+  if (!priceId) return NextResponse.json({ error: 'Invalid type' }, { status: 400 })
 
   const session = await stripe.checkout.sessions.create({
-    customer: profile?.stripe_customer_id || undefined,
-    customer_email: !profile?.stripe_customer_id ? user.email : undefined,
+    customer_email: user.email!,
     payment_method_types: ['card'],
     line_items: [{ price: priceId, quantity: 1 }],
-    mode: 'subscription',
-    success_url: process.env.NEXT_PUBLIC_APP_URL + '/dashboard?upgraded=true',
-    cancel_url: process.env.NEXT_PUBLIC_APP_URL + '/dashboard?cancelled=true',
-    metadata: { user_id: user.id, plan },
+    mode: 'payment',
+    success_url: process.env.NEXT_PUBLIC_APP_URL + '/api/payment-success?session_id={CHECKOUT_SESSION_ID}&portfolio_id=' + portfolio_id + '&type=' + type,
+    cancel_url: process.env.NEXT_PUBLIC_APP_URL + '/dashboard/portfolio/' + portfolio_id + '?cancelled=true',
+    metadata: { user_id: user.id, portfolio_id, type },
   })
 
   return NextResponse.json({ url: session.url })

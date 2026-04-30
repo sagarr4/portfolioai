@@ -1,29 +1,32 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function PricingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
-  const [checking, setChecking] = useState(true)
+  const [portfolioId, setPortfolioId] = useState<string | null>(null)
 
   useEffect(() => {
+    // Get portfolio ID from URL or latest portfolio
+    const params = new URLSearchParams(window.location.search)
+    const pid = params.get('portfolio_id')
+    if (pid) setPortfolioId(pid)
+    
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) router.push('/auth/login?redirect=/pricing')
-      else setChecking(false)
     })
   }, [])
 
-  async function handleUpgrade(plan: string) {
-    setLoading(plan)
+  async function handlePurchase(type: string) {
+    setLoading(type)
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan })
+        body: JSON.stringify({ type, portfolio_id: portfolioId })
       })
       const data = await res.json()
       if (data.url) window.location.href = data.url
@@ -32,99 +35,153 @@ export default function PricingPage() {
     setLoading(null)
   }
 
-  if (checking) return (
-    <div style={{minHeight:'100vh',background:'#0c0a08',display:'flex',alignItems:'center',justifyContent:'center'}}>
-      <div style={{fontFamily:"'DM Sans',sans-serif",color:'rgba(245,240,232,.3)',fontSize:14}}>Loading...</div>
-    </div>
-  )
-
   return (
     <div style={{minHeight:'100vh',background:'#0c0a08',color:'#f5f0e8'}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         body{-webkit-font-smoothing:antialiased}
-        .btn{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:14px 24px;border-radius:3px;cursor:pointer;border:none;transition:all .25s;letter-spacing:.02em;width:100%;display:block;text-align:center;text-decoration:none}
-        .btn-gold{background:#c9a96e;color:#0c0a08}.btn-gold:hover{background:#dbb97e;transform:translateY(-1px)}
-        .btn-dark{background:#f5f0e8;color:#0c0a08}.btn-dark:hover{background:#fff}
-        .btn-outline{background:transparent;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.15)}.btn-outline:hover{color:#f5f0e8;border-color:rgba(245,240,232,.35)}
-        .plan{border-radius:4px;padding:48px;border:1px solid rgba(245,240,232,.08);background:#100e0a;transition:all .35s}
-        .plan:hover{transform:translateY(-4px);border-color:rgba(201,169,110,.15)}
-        .plan-gold{background:#c9a96e;border-color:#c9a96e}
-        .plan-gold:hover{background:#d4b47a}
-        .li{font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(245,240,232,.5);display:flex;align-items:flex-start;gap:10px;line-height:1.5;margin-bottom:12px}
-        .li-gold{color:rgba(12,10,8,.6)}
-        .ck{color:#c9a96e;font-weight:700;flex-shrink:0}
-        .ck-dark{color:#0c0a08}
+        .card{background:#100e0a;border:1px solid rgba(245,240,232,.08);border-radius:4px;padding:48px;transition:all .35s;position:relative}
+        .card:hover{border-color:rgba(201,169,110,.2);transform:translateY(-4px)}
+        .card-featured{background:linear-gradient(135deg,#1a1408,#141008);border-color:rgba(201,169,110,.3)}
+        .badge{display:inline-block;background:rgba(201,169,110,.15);color:#c9a96e;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:2px;border:1px solid rgba(201,169,110,.2);margin-bottom:24px}
+        .price{font-family:'Playfair Display',serif;font-size:72px;font-weight:700;letter-spacing:-.05em;color:#f5f0e8;line-height:1}
+        .price-note{font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(245,240,232,.3);font-weight:300;margin-top:4px;margin-bottom:36px}
+        .feature{font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(245,240,232,.55);display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;line-height:1.5}
+        .check{color:#c9a96e;font-weight:700;flex-shrink:0}
+        .btn{width:100%;padding:15px 24px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;letter-spacing:.03em;cursor:pointer;border:none;transition:all .25s;margin-top:36px;display:block;text-align:center}
+        .btn-gold{background:#c9a96e;color:#0c0a08}.btn-gold:hover:not(:disabled){background:#dbb97e;transform:translateY(-1px)}
+        .btn-outline{background:transparent;color:rgba(245,240,232,.6);border:1px solid rgba(245,240,232,.15)}.btn-outline:hover:not(:disabled){color:#f5f0e8;border-color:rgba(245,240,232,.35)}
+        .btn:disabled{opacity:.5;cursor:not-allowed}
+        .divider{height:1px;background:rgba(245,240,232,.07);margin:28px 0}
+        .saving{font-family:'DM Sans',sans-serif;font-size:12px;color:#4ade80;font-weight:500;letter-spacing:.04em}
       `}</style>
 
       <nav style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
         <a href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
           Portfolio<span style={{color:'#c9a96e'}}>AI</span>
         </a>
-        <Link href="/dashboard" style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.4)',textDecoration:'none'}}>Back to dashboard</Link>
+        <a href="/dashboard" style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.4)',textDecoration:'none'}}>Back to dashboard</a>
       </nav>
 
-      <div style={{maxWidth:1100,margin:'0 auto',padding:'100px 72px'}}>
+      <div style={{maxWidth:1000,margin:'0 auto',padding:'100px 72px'}}>
+
+        {/* HEADER */}
         <div style={{textAlign:'center',marginBottom:80}}>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.18em',textTransform:'uppercase',color:'#c9a96e',marginBottom:20,display:'flex',alignItems:'center',justifyContent:'center',gap:12}}>
             <span style={{width:32,height:1,background:'rgba(201,169,110,.4)',display:'block'}}/>
-            Pricing
+            Simple pricing
             <span style={{width:32,height:1,background:'rgba(201,169,110,.4)',display:'block'}}/>
           </div>
           <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1,marginBottom:16}}>
-            Simple. <em style={{fontStyle:'italic',color:'#c9a96e'}}>Transparent.</em>
+            Try free.<br/><em style={{fontStyle:'italic',color:'#c9a96e'}}>Pay when you love it.</em>
           </h1>
-          <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:17,color:'rgba(245,240,232,.4)',fontWeight:300}}>
-            Start free. Upgrade when you are ready.
+          <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:17,color:'rgba(245,240,232,.4)',fontWeight:300,maxWidth:480,margin:'0 auto'}}>
+            Generate your portfolio for free. Only pay when you want to share it with the world.
           </p>
         </div>
 
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20}}>
-          <div className="plan">
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:20}}>Free</div>
-            <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#f5f0e8',lineHeight:1,marginBottom:8}}>Free</div>
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(245,240,232,.28)',marginBottom:40,fontWeight:300}}>No credit card required</div>
-            <div style={{height:1,background:'rgba(245,240,232,.07)',marginBottom:32}}/>
-            {['1 portfolio website','PortfolioAI subdomain','All profession themes','AI-generated copy','Publish instantly'].map((f,i) => (
-              <div key={i} className="li"><span className="ck">+</span>{f}</div>
-            ))}
-            <div style={{marginTop:32}}>
-              <Link href="/dashboard" className="btn btn-outline">Get started free</Link>
-            </div>
+        {/* CARDS */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20,marginBottom:60}}>
+
+          {/* FREE */}
+          <div className="card">
+            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:20}}>Free forever</div>
+            <div className="price">$0</div>
+            <div className="price-note">No credit card needed</div>
+            <div className="divider"/>
+            {[
+              'Upload your resume',
+              'AI generates your portfolio',
+              'Preview your site',
+              'See your design before paying',
+            ].map((f,i) => <div key={i} className="feature"><span className="check">+</span>{f}</div>)}
+            <a href="/dashboard" className="btn btn-outline">Start free</a>
           </div>
 
-          <div className="plan plan-gold">
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:10,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',background:'rgba(12,10,8,.15)',color:'rgba(12,10,8,.5)',padding:'5px 12px',borderRadius:2,display:'inline-block',marginBottom:20}}>Most popular</div>
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(12,10,8,.4)',marginBottom:16}}>Pro</div>
-            <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#0c0a08',lineHeight:1,marginBottom:8}}>$11.99</div>
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(12,10,8,.45)',marginBottom:40,fontWeight:300}}>per month — cancel anytime</div>
-            <div style={{height:1,background:'rgba(12,10,8,.12)',marginBottom:32}}/>
-            {['3 portfolio websites','Custom domain','No PortfolioAI branding','Portfolio analytics','Priority AI generation','Email support'].map((f,i) => (
-              <div key={i} className="li li-gold"><span className="ck ck-dark">+</span>{f}</div>
-            ))}
-            <div style={{marginTop:32}}>
-              <button onClick={() => handleUpgrade('pro')} disabled={loading === 'pro'} className="btn btn-dark">
-                {loading === 'pro' ? 'Loading...' : 'Start Pro — $11.99/mo'}
-              </button>
+          {/* BUNDLE - FEATURED */}
+          <div className="card card-featured">
+            <div className="badge">Best value — save 30%</div>
+            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(201,169,110,.6)',marginBottom:16}}>Launch Bundle</div>
+            <div className="price" style={{color:'#c9a96e'}}>$9.99</div>
+            <div className="price-note">one-time payment · yours forever</div>
+            <div className="divider"/>
+            {[
+              'Everything in Launch',
+              'Live public URL — share instantly',
+              '3 design regenerations included',
+              'Perfect for active job seekers',
+              'Less than 2 coffees',
+            ].map((f,i) => <div key={i} className="feature"><span className="check">+</span>{f}</div>)}
+            <div style={{marginTop:8}}>
+              <div className="saving">You save $4.96 vs buying separately</div>
             </div>
+            <button onClick={() => handlePurchase('bundle')} disabled={loading === 'bundle'} className="btn btn-gold">
+              {loading === 'bundle' ? 'Loading...' : 'Get Launch Bundle — $9.99'}
+            </button>
           </div>
 
-          <div className="plan">
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:20}}>Team</div>
-            <div style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.05em',color:'#f5f0e8',lineHeight:1,marginBottom:8}}>$48.99</div>
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(245,240,232,.28)',marginBottom:40,fontWeight:300}}>per month</div>
-            <div style={{height:1,background:'rgba(245,240,232,.07)',marginBottom:32}}/>
-            {['Unlimited portfolios','White label','Custom domain','API access','Recruiter dashboard','Bulk generation','Priority support'].map((f,i) => (
-              <div key={i} className="li"><span className="ck">+</span>{f}</div>
-            ))}
-            <div style={{marginTop:32}}>
-              <button onClick={() => handleUpgrade('team')} disabled={loading === 'team'} className="btn btn-gold">
-                {loading === 'team' ? 'Loading...' : 'Start Team — $48.99/mo'}
-              </button>
-            </div>
+          {/* LAUNCH */}
+          <div className="card">
+            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:20}}>Launch</div>
+            <div className="price">$4.99</div>
+            <div className="price-note">one-time · less than a coffee</div>
+            <div className="divider"/>
+            {[
+              'Live public URL forever',
+              'Share with recruiters',
+              'Remove PortfolioAI watermark',
+              'No monthly fees ever',
+            ].map((f,i) => <div key={i} className="feature"><span className="check">+</span>{f}</div>)}
+            <button onClick={() => handlePurchase('launch')} disabled={loading === 'launch'} className="btn btn-gold">
+              {loading === 'launch' ? 'Loading...' : 'Launch my portfolio — $4.99'}
+            </button>
           </div>
+
         </div>
+
+        {/* REGEN ADD-ON */}
+        <div style={{background:'#100e0a',border:'1px solid rgba(245,240,232,.07)',borderRadius:4,padding:'36px 48px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:32,flexWrap:'wrap'}}>
+          <div>
+            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:8}}>Add-on</div>
+            <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:24,fontWeight:700,color:'#f5f0e8',letterSpacing:'-.03em',marginBottom:8}}>New Design — $3.99</h3>
+            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(245,240,232,.4)',fontWeight:300,maxWidth:480}}>
+              Not feeling your current design? Get a completely new AI-generated portfolio. Different layout, different style, same content. Pay only when you want a change.
+            </p>
+          </div>
+          <button onClick={() => handlePurchase('regen')} disabled={loading === 'regen'} style={{
+            padding:'14px 32px',
+            background:'transparent',
+            color:'#c9a96e',
+            border:'1px solid rgba(201,169,110,.3)',
+            borderRadius:3,
+            fontFamily:"'DM Sans',sans-serif",
+            fontSize:14,
+            fontWeight:600,
+            cursor:'pointer',
+            transition:'all .25s',
+            whiteSpace:'nowrap',
+            flexShrink:0,
+          }}>
+            {loading === 'regen' ? 'Loading...' : 'Get new design — $3.99'}
+          </button>
+        </div>
+
+        {/* TRUST */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:24,marginTop:48}}>
+          {[
+            {icon:'🔒',title:'Secure payment',desc:'Powered by Stripe. Your card details are never stored.'},
+            {icon:'♾️',title:'Yours forever',desc:'One payment. Your portfolio stays live permanently.'},
+            {icon:'⚡',title:'Instant delivery',desc:'Portfolio goes live immediately after payment.'},
+          ].map((t,i) => (
+            <div key={i} style={{textAlign:'center',padding:'24px'}}>
+              <div style={{fontSize:28,marginBottom:12}}>{t.icon}</div>
+              <div style={{fontFamily:"'Playfair Display',serif",fontSize:16,fontWeight:700,color:'#f5f0e8',marginBottom:8}}>{t.title}</div>
+              <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.35)',fontWeight:300,lineHeight:1.6}}>{t.desc}</div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   )
