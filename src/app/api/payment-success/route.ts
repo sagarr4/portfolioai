@@ -70,7 +70,7 @@ async function getHtmlWithoutWatermark(supabase: any, portfolioId: string) {
   
   let html = data?.html_content || ''
   // Remove watermark
-  html = html.replace(/<div[^>]*portfolioai-watermark[^>]*>.*?<\/div>/gs, '')
-  html = html.replace(/<!-- watermark -->.*?<!-- end watermark -->/gs, '')
+  html = html.replace(/<div[^>]*portfolioai-watermark[^>]*>.*?<\/div>/g, '')
+  html = html.replace(/<!-- watermark -->.*?<!-- end watermark -->/g, '')
   return html
 }
