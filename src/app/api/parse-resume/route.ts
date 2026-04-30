@@ -17,18 +17,6 @@ function addWatermark(html: string): string {
   return html.includes('</body>') ? html.replace('</body>', watermark + '</body>') : html + watermark
 }
 
-function addWatermark(html: string): string {
-  const watermark = `
-<!-- watermark -->
-<div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.95);border-top:1px solid rgba(201,169,110,.2);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;">
-  <span style="font-size:13px;color:rgba(245,240,232,.5);font-weight:300;">Preview only — <strong style="color:#c9a96e;font-weight:600;">Launch for \$4.99</strong> to share this portfolio</span>
-  <a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:8px 20px;border-radius:3px;font-size:13px;font-weight:600;text-decoration:none;letter-spacing:.02em;">Launch now →</a>
-</div>
-<!-- end watermark -->
-`
-  return html.includes('</body>') ? html.replace('</body>', watermark + '</body>') : html + watermark
-}
-
 export async function POST(request: Request) {
   try {
     const supabase = await createClient()
