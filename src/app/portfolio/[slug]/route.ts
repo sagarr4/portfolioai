@@ -28,7 +28,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   let html = data.html_content
   
   // Remove watermark for published (paid) portfolios
-  html = html.replace(/<!-- watermark -->.*?<!-- end watermark -->/gs, '')
+  html = html.replace(/<!-- watermark -->[\s\S]*?<!-- end watermark -->/g, '')
 
   // Fix hidden elements
   html = html.replace(/opacitys*:s*0/g, 'opacity:1')
