@@ -49,37 +49,6 @@ export async function POST(request: Request) {
       }
     }
 
-
-    // Check plan limits
-    const allowedEmails = (process.env.ALLOWED_EMAILS || '').split(',').map(e => e.trim())
-    const isWhitelisted = allowedEmails.includes(user.email || '')
-
-    if (!isWhitelisted) {
-      const { data: profile } = await supabase
-        .from('profiles').select('plan').eq('id', user.id).single()
-      
-      const plan = profile?.plan || 'free'
-      const limits: Record<string, number> = { free: 1, pro: 3, team: 999 }
-      const limit = limits[plan] || 1
-
-      const { count } = await supabase
-        .from('portfolios')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-
-      if ((count || 0) >= limit) {
-        return NextResponse.json({ 
-          error: 'UPGRADE_REQUIRED',
-          message: plan === 'free' 
-            ? 'Free plan allows 1 portfolio. Upgrade to Pro for 3 portfolios.'
-            : 'You have reached your portfolio limit. Upgrade to Team for unlimited.',
-          plan,
-          limit
-        }, { status: 403 })
-      }
-    }
-
-
     const formData = await request.formData()
     const file = formData.get('resume') as File
     if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 })
