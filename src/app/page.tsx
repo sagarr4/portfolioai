@@ -291,39 +291,39 @@ export default function LandingPage() {
           <div className="PL">
             <div className="ptier">Free</div>
             <div className="ppr">Free</div>
-            <div className="pmo">No credit card required</div>
+            <div className="pmo">Try before you pay</div>
             <div className="prule"/>
             <ul className="plist">
-              {['1 portfolio website','PortfolioAI subdomain','All profession themes','AI-generated copy','Publish instantly'].map((f,i) => (
+              {['Generate your portfolio','Preview before paying','AI-generated copy','All profession themes'].map((f,i) => (
                 <li key={i}><span className="pck">+</span>{f}</li>
               ))}
             </ul>
-            <Link href="/auth/signup" className="pabtn pb1">Get started free</Link>
+            <Link href="/auth/signup" className="pabtn pb1">Start free</Link>
           </div>
           <div className="PL PG">
-            <div className="ptag">Most popular</div>
-            <div className="ptier">Pro</div>
-            <div className="ppr">$12</div>
-            <div className="pmo">per month — cancel anytime</div>
+            <div className="ptag">Best value</div>
+            <div className="ptier">Bundle</div>
+            <div className="ppr">$9.99</div>
+            <div className="pmo">one-time — save 30%</div>
             <div className="prule"/>
             <ul className="plist">
-              {['3 portfolio websites','Custom domain','No PortfolioAI branding','Portfolio analytics','Priority generation','Email support'].map((f,i) => (
+              {['Launch portfolio live','3 design regenerations','Public URL forever','No monthly fees','Share with recruiters'].map((f,i) => (
                 <li key={i}><span className="pck">+</span>{f}</li>
               ))}
             </ul>
-            <Link href="/auth/signup" className="pabtn pb2">Start Pro</Link>
+            <Link href="/pricing" className="pabtn pb2">Get Bundle — $9.99</Link>
           </div>
           <div className="PL">
-            <div className="ptier">Team</div>
-            <div className="ppr">$49</div>
-            <div className="pmo">per month</div>
+            <div className="ptier">Launch</div>
+            <div className="ppr">$4.99</div>
+            <div className="pmo">one-time · less than a coffee</div>
             <div className="prule"/>
             <ul className="plist">
-              {['Unlimited portfolios','White label','Custom domain','API access','Recruiter dashboard','Bulk generation'].map((f,i) => (
+              {['Live public URL forever','Share with recruiters','No branding','One payment only'].map((f,i) => (
                 <li key={i}><span className="pck">+</span>{f}</li>
               ))}
             </ul>
-            <Link href="/auth/signup" className="pabtn pb3">Contact us</Link>
+            <Link href="/pricing" className="pabtn pb3">Launch — $4.99</Link>
           </div>
         </div>
       </section>
