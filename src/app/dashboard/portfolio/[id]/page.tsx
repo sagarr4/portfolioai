@@ -30,8 +30,12 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
       if (data.success) {
         await fetch('/api/publish/' + id)
         setPortfolio((p: any) => ({ ...p, is_published: true }))
-        alert('New portfolio generated and published!')
+        alert('New portfolio generated!')
         window.location.reload()
+      } else if (data.error === 'PAYMENT_REQUIRED') {
+        if (confirm('You need to purchase a new design for $3.99.\nGo to pricing?')) {
+          window.location.href = '/pricing?portfolio_id=' + id
+        }
       } else {
         alert('Failed: ' + data.error)
       }
