@@ -23,6 +23,33 @@ export async function POST(request: Request) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+    // Payment enforcement
+    const allowedEmails = (process.env.ALLOWED_EMAILS || '').split(',').map(e => e.trim())
+    const isWhitelisted = allowedEmails.includes(user.email || '')
+
+    if (!isWhitelisted) {
+      const { count } = await supabase
+        .from('portfolios')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+
+      if ((count || 0) >= 1) {
+        const { data: payments } = await supabase
+          .from('payments')
+          .select('id')
+          .eq('user_id', user.id)
+          .limit(1)
+
+        if (!payments || payments.length === 0) {
+          return NextResponse.json({
+            error: 'PAYMENT_REQUIRED',
+            message: 'Please launch your first portfolio for $4.99 before creating another one.',
+          }, { status: 402 })
+        }
+      }
+    }
+
+
     // Check plan limits
     const allowedEmails = (process.env.ALLOWED_EMAILS || '').split(',').map(e => e.trim())
     const isWhitelisted = allowedEmails.includes(user.email || '')
