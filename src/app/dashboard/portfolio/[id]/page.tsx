@@ -33,9 +33,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         alert('New portfolio generated!')
         window.location.reload()
       } else if (data.error === 'PAYMENT_REQUIRED') {
-        if (confirm('You need to purchase a new design for $3.99.\nGo to pricing?')) {
-          window.location.href = '/pricing?portfolio_id=' + id
-        }
+          window.location.href = '/pricing?portfolio_id=' + id + '&reason=regen'
       } else {
         alert('Failed: ' + data.error)
       }

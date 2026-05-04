@@ -8,11 +8,14 @@ export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null)
   const [portfolioId, setPortfolioId] = useState<string | null>(null)
 
+  const [reason, setReason] = useState('')
+
   useEffect(() => {
-    // Get portfolio ID from URL or latest portfolio
     const params = new URLSearchParams(window.location.search)
     const pid = params.get('portfolio_id')
+    const r = params.get('reason')
     if (pid) setPortfolioId(pid)
+    if (r) setReason(r)
     
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -65,6 +68,15 @@ export default function PricingPage() {
       </nav>
 
       <div style={{maxWidth:1000,margin:'0 auto',padding:'100px 72px'}}>
+
+        {/* CONTEXT BANNER */}
+        {reason && (
+          <div style={{background:'rgba(201,169,110,.08)',border:'1px solid rgba(201,169,110,.2)',borderRadius:4,padding:'16px 24px',marginBottom:40,textAlign:'center'}}>
+            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'#c9a96e',fontWeight:500}}>
+              {reason === 'second_portfolio' ? '✦ Launch your first portfolio to unlock more generations' : '✦ Get a fresh new design for just $3.99'}
+            </p>
+          </div>
+        )}
 
         {/* HEADER */}
         <div style={{textAlign:'center',marginBottom:80}}>
