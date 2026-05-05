@@ -5,17 +5,7 @@ import { parseResume } from '@/lib/ai/parseResume'
 import { generatePortfolioHTML } from '@/lib/ai/generatePortfolio'
 import { NextResponse } from 'next/server'
 
-function addWatermark(html: string): string {
-  const watermark = `
-<!-- watermark -->
-<div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.95);border-top:1px solid rgba(201,169,110,.2);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;">
-  <span style="font-size:13px;color:rgba(245,240,232,.5);font-weight:300;">Preview only — <strong style="color:#c9a96e;font-weight:600;">Launch for \$4.99</strong> to share this portfolio</span>
-  <a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:8px 20px;border-radius:3px;font-size:13px;font-weight:600;text-decoration:none;letter-spacing:.02em;">Launch now →</a>
-</div>
-<!-- end watermark -->
-`
-  return html.includes('</body>') ? html.replace('</body>', watermark + '</body>') : html + watermark
-}
+const WATERMARK = `<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;gap:16px;"><span style="font-size:13px;color:rgba(245,240,232,.7);">✦ Preview only — <strong style="color:#c9a96e;font-weight:600;">Launch for $4.99</strong> to share with recruiters</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:9px 22px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;">Launch now →</a></div><!-- end watermark -->`
 
 export async function POST(request: Request) {
   try {
@@ -43,7 +33,7 @@ export async function POST(request: Request) {
         if (!payments || payments.length === 0) {
           return NextResponse.json({
             error: 'PAYMENT_REQUIRED',
-            message: 'Please launch your first portfolio for $4.99 before creating another one.',
+            message: 'Launch your first portfolio for $4.99 before creating another one.',
           }, { status: 402 })
         }
       }
@@ -55,20 +45,20 @@ export async function POST(request: Request) {
     if (file.type !== 'application/pdf') return NextResponse.json({ error: 'PDF only' }, { status: 400 })
     if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Max 5MB' }, { status: 400 })
 
-    // Extract text from PDF
     const buffer = Buffer.from(await file.arrayBuffer())
     const text = await extractTextFromPdf(buffer)
     if (!text || text.trim().length < 50) {
       return NextResponse.json({ error: 'Could not read PDF text' }, { status: 400 })
     }
 
-    // Parse with Claude Haiku
     const parsed = await parseResume(text)
+    let htmlContent = await generatePortfolioHTML(parsed)
 
-    // Generate full portfolio HTML with Claude Sonnet
-    const htmlContent = await generatePortfolioHTML(parsed)
+    // Add watermark to all free previews
+    htmlContent = htmlContent.includes('</body>')
+      ? htmlContent.replace('</body>', WATERMARK + '</body>')
+      : htmlContent + WATERMARK
 
-    // Save to database
     const slug = parsed.name.toLowerCase()
       .replace(/[^a-z0-9\s]/g, '')
       .replace(/\s+/g, '-')
@@ -84,7 +74,7 @@ export async function POST(request: Request) {
         field_confidence: parsed.field_confidence,
         theme: parsed.theme,
         portfolio_data: parsed,
-        html_content: addWatermark(htmlContent),
+        html_content: htmlContent,
         is_published: true,
       })
       .select()
