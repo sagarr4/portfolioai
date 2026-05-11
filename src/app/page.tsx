@@ -343,7 +343,7 @@ export default function LandingPage() {
       <footer className="FOOT">
         <a href="/" className="flogo">Portfolio<b>AI</b></a>
         <div className="flinks">
-          <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
+          <a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/contact">Contact</a>
         </div>
         <div className="fcopy">© 2026 PortfolioAI. All rights reserved.</div>
       </footer>

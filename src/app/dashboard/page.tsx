@@ -37,6 +37,7 @@ export default async function DashboardPage() {
           <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300}}>{user.email}</span>
           <div style={{width:1,height:16,background:'rgba(245,240,232,.1)'}}/>
           <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.1em',textTransform:'uppercase',color:'#c9a96e',background:'rgba(201,169,110,.1)',padding:'5px 12px',borderRadius:2,border:'1px solid rgba(201,169,110,.15)'}}>Free plan</span>
+          <a href="/api/auth/logout" style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:'rgba(245,240,232,.3)',textDecoration:'none',marginLeft:8}}>Sign out</a>
         </div>
       </nav>
 
