@@ -81,7 +81,7 @@ CREATIVE REQUIREMENTS:
 OUTPUT: Return ONLY the complete HTML. No explanation. No markdown fences. Start with <!DOCTYPE html> end with </html>.`
 
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: 'claude-opus-4-7',
     max_tokens: 16000,
     messages: [{ role: 'user', content: prompt }],
   })

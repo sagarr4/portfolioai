@@ -5,7 +5,7 @@ import { parseResume } from '@/lib/ai/parseResume'
 import { generatePortfolioHTML } from '@/lib/ai/generatePortfolio'
 import { NextResponse } from 'next/server'
 
-const WATERMARK = `<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;gap:16px;"><span style="font-size:13px;color:rgba(245,240,232,.7);">✦ Preview only — <strong style="color:#c9a96e;font-weight:600;">Launch for $4.99</strong> to share with recruiters</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:9px 22px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;">Launch now →</a></div><!-- end watermark -->`
+const WATERMARK = '<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;gap:16px;"><span style="font-size:13px;color:rgba(245,240,232,.7);">Preview only — <strong style="color:#c9a96e;font-weight:600;">Launch for $4.99</strong> to share</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:9px 22px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;">Launch now</a></div><!-- end watermark -->'
 
 export async function POST(request: Request) {
   try {
@@ -13,27 +13,48 @@ export async function POST(request: Request) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    // Payment enforcement
-    const allowedEmails = (process.env.ALLOWED_EMAILS || '').split(',').map(e => e.trim())
-    const isWhitelisted = allowedEmails.includes(user.email || '')
+    // STRICT PAYMENT ENFORCEMENT
+    const allowedEmails = (process.env.ALLOWED_EMAILS || '').split(',').map(e => e.trim().toLowerCase())
+    const userEmail = (user.email || '').toLowerCase()
+    const isWhitelisted = allowedEmails.includes(userEmail)
+
+    console.log('Upload check - User:', userEmail, 'Whitelisted:', isWhitelisted)
 
     if (!isWhitelisted) {
-      const { count } = await supabase
+      // Count existing portfolios
+      const { count: portfolioCount, error: countError } = await supabase
         .from('portfolios')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id)
 
-      if ((count || 0) >= 1) {
-        const { data: payments } = await supabase
-          .from('payments')
-          .select('id')
-          .eq('user_id', user.id)
-          .limit(1)
+      console.log('Portfolio count for user:', portfolioCount, 'Error:', countError?.message)
 
-        if (!payments || payments.length === 0) {
+      if ((portfolioCount || 0) >= 1) {
+        // Check if user has ANY successful payment
+        const { data: payments, error: payError } = await supabase
+          .from('payments')
+          .select('id, type')
+          .eq('user_id', user.id)
+
+        console.log('Payments found:', payments?.length, 'Error:', payError?.message)
+
+        const hasAnyPayment = payments && payments.length > 0
+
+        if (!hasAnyPayment) {
           return NextResponse.json({
             error: 'PAYMENT_REQUIRED',
             message: 'Launch your first portfolio for $4.99 before creating another one.',
+          }, { status: 402 })
+        }
+
+        // Check plan limits for paid users
+        const launchPayments = payments.filter(p => p.type === 'launch' || p.type === 'bundle').length
+        const maxAllowed = launchPayments + 1 // 1 free + 1 per launch payment
+
+        if ((portfolioCount || 0) >= maxAllowed) {
+          return NextResponse.json({
+            error: 'PAYMENT_REQUIRED',
+            message: 'Launch this portfolio for $4.99 to create another one.',
           }, { status: 402 })
         }
       }
@@ -54,7 +75,6 @@ export async function POST(request: Request) {
     const parsed = await parseResume(text)
     let htmlContent = await generatePortfolioHTML(parsed)
 
-    // Add watermark to all free previews
     htmlContent = htmlContent.includes('</body>')
       ? htmlContent.replace('</body>', WATERMARK + '</body>')
       : htmlContent + WATERMARK
@@ -75,7 +95,7 @@ export async function POST(request: Request) {
         theme: parsed.theme,
         portfolio_data: parsed,
         html_content: htmlContent,
-        is_published: true,
+        is_published: false,
       })
       .select()
       .single()
