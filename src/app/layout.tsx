@@ -5,6 +5,13 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+}
+
 export const metadata: Metadata = {
   title: 'PortfolioAI — Turn Your Resume Into a World-Class Portfolio Website',
   description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 60 seconds. Designed specifically for your profession. Used by 2,000+ job seekers.',
