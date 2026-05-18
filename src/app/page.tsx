@@ -45,7 +45,7 @@ export default function LandingPage() {
         .hline{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:100%;background:linear-gradient(to bottom,transparent,rgba(201,169,110,.18) 35%,rgba(201,169,110,.07) 70%,transparent);pointer-events:none}
         .kicker{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#c9a96e;margin-bottom:44px;display:flex;align-items:center;gap:16px;position:relative;z-index:1}
         .kline{width:48px;height:1px;background:rgba(201,169,110,.45)}
-        .H1{font-size:clamp(60px,10vw,140px);font-weight:800;line-height:.9;letter-spacing:-.055em;color:#f5f0e8;max-width:1100px;position:relative;z-index:1;margin-bottom:0}
+        .H1{font-size:clamp(48px,7vw,96px);font-weight:800;line-height:.9;letter-spacing:-.055em;color:#f5f0e8;max-width:1100px;position:relative;z-index:1;margin-bottom:0}
         .H1 em{font-style:italic;color:#c9a96e;font-weight:700}
         .vline{width:1px;height:72px;background:linear-gradient(to bottom,rgba(201,169,110,.5),transparent);margin:44px auto;position:relative;z-index:1}
         .hsub{font-family:'DM Sans',sans-serif;font-size:clamp(16px,1.7vw,20px);font-weight:300;line-height:1.75;color:rgba(245,240,232,.45);max-width:520px;margin-bottom:52px;position:relative;z-index:1}
@@ -67,7 +67,7 @@ export default function LandingPage() {
         .grid2{display:grid;grid-template-columns:1fr 1fr;gap:120px;align-items:center}
         .ey{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#c9a96e;margin-bottom:20px;display:flex;align-items:center;gap:16px}
         .ey::before{content:'';width:48px;height:1px;background:rgba(201,169,110,.45);display:block}
-        .DH{font-size:clamp(40px,5.2vw,72px);font-weight:700;line-height:1.0;letter-spacing:-.045em;color:#f5f0e8}
+        .DH{font-size:clamp(32px,4.5vw,56px);font-weight:700;line-height:1.0;letter-spacing:-.045em;color:#f5f0e8}
         .DH em{font-style:italic;color:#c9a96e}
         .BT{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:300;line-height:1.8;color:rgba(245,240,232,.42)}
         .BT p{margin-bottom:24px}
@@ -331,7 +331,7 @@ export default function LandingPage() {
       <div className="FINAL r">
         <div className="fglow"/>
         <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.18em',textTransform:'uppercase',color:'#c9a96e',marginBottom:28,position:'relative',zIndex:1}}>One upload away</div>
-        <h2 style={{fontSize:'clamp(52px,7.5vw,104px)',fontWeight:800,lineHeight:.9,letterSpacing:'-.055em',color:'#f5f0e8',marginBottom:28,position:'relative',zIndex:1}}>
+        <h2 style={{fontSize:'clamp(40px,5.5vw,72px)',fontWeight:800,lineHeight:.9,letterSpacing:'-.055em',color:'#f5f0e8',marginBottom:28,position:'relative',zIndex:1}}>
           Your career deserves<br/>a <em style={{fontStyle:'italic',color:'#c9a96e'}}>beautiful</em> home.
         </h2>
         <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:18,fontWeight:300,color:'rgba(245,240,232,.38)',marginBottom:56,position:'relative',zIndex:1}}>No design skills. No technical knowledge. No templates. Just your resume.</p>
