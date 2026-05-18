@@ -48,7 +48,7 @@ export default function PricingPage() {
         .card:hover{border-color:rgba(201,169,110,.2);transform:translateY(-4px)}
         .card-featured{background:linear-gradient(135deg,#1a1408,#141008);border-color:rgba(201,169,110,.3)}
         .badge{display:inline-block;background:rgba(201,169,110,.15);color:#c9a96e;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:2px;border:1px solid rgba(201,169,110,.2);margin-bottom:24px}
-        .price{font-family:'Playfair Display',serif;font-size:72px;font-weight:700;letter-spacing:-.025em;color:#f5f0e8;line-height:1}
+        .price{font-family:'Playfair Display',serif;font-size:72px;font-weight:700;letter-spacing:-.05em;color:#f5f0e8;line-height:1}
         .price-note{font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(245,240,232,.3);font-weight:300;margin-top:4px;margin-bottom:36px}
         .feature{font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(245,240,232,.55);display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;line-height:1.5}
         .check{color:#c9a96e;font-weight:700;flex-shrink:0}

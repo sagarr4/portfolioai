@@ -3,17 +3,6 @@
 :root {
   --background: #0c0a08;
   --foreground: #f5f0e8;
-  
-  /* Consistent typography scale - use these everywhere */
-  --text-display: clamp(40px, 6vw, 80px);     /* Hero headlines */
-  --text-h1: clamp(36px, 5.5vw, 72px);        /* Page titles */
-  --text-h2: clamp(32px, 5vw, 64px);          /* Section titles */
-  --text-h3: clamp(28px, 4.5vw, 56px);        /* Subsections */
-  --text-h4: clamp(24px, 3.5vw, 40px);        /* Card titles */
-  --text-large: clamp(18px, 1.8vw, 22px);     /* Lead paragraph */
-  --text-base: clamp(15px, 1.4vw, 17px);      /* Body text */
-  --text-small: 14px;                          /* Captions */
-  --text-tiny: 12px;                           /* Labels */
 }
 
 @theme inline {
@@ -21,6 +10,7 @@
   --color-foreground: var(--foreground);
 }
 
+/* Critical CSS reset - prevents Vercel rendering differences */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -34,14 +24,13 @@ html {
   text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "DM Sans", Roboto, sans-serif;
-  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -66,12 +55,3 @@ button {
   border: none;
   color: inherit;
 }
-
-/* Responsive container widths */
-.container-narrow { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-.container-wide { max-width: 1440px; margin: 0 auto; padding: 0 24px; }
-
-/* Consistent section spacing */
-.section { padding: clamp(64px, 10vw, 120px) 0; }
-.section-sm { padding: clamp(48px, 7vw, 80px) 0; }
