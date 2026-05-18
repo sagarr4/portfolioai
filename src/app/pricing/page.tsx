@@ -113,14 +113,14 @@ export default function PricingPage() {
 
           {/* BUNDLE - FEATURED */}
           <div className="card card-featured">
-            <div className="badge">Best value — save 30%</div>
+            <div className="badge">Best value, save 30%</div>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(201,169,110,.6)',marginBottom:16}}>Launch Bundle</div>
             <div className="price" style={{color:'#c9a96e'}}>$9.99</div>
             <div className="price-note">one-time payment · yours forever</div>
             <div className="divider"/>
             {[
               'Everything in Launch',
-              'Live public URL — share instantly',
+              'Live public URL, share instantly',
               '3 design regenerations included',
               'Perfect for active job seekers',
               'Less than 2 coffees',
@@ -129,7 +129,7 @@ export default function PricingPage() {
               <div className="saving">You save $4.96 vs buying separately</div>
             </div>
             <button onClick={() => handlePurchase('bundle')} disabled={loading === 'bundle'} className="btn btn-gold">
-              {loading === 'bundle' ? 'Loading...' : 'Get Launch Bundle — $9.99'}
+              {loading === 'bundle' ? 'Loading...' : 'Get Launch Bundle, $9.99'}
             </button>
           </div>
 
@@ -146,7 +146,7 @@ export default function PricingPage() {
               'No monthly fees ever',
             ].map((f,i) => <div key={i} className="feature"><span className="check">+</span>{f}</div>)}
             <button onClick={() => handlePurchase('launch')} disabled={loading === 'launch'} className="btn btn-gold">
-              {loading === 'launch' ? 'Loading...' : 'Launch my portfolio — $4.99'}
+              {loading === 'launch' ? 'Loading...' : 'Launch my portfolio, $4.99'}
             </button>
           </div>
 
@@ -156,7 +156,7 @@ export default function PricingPage() {
         <div style={{background:'#100e0a',border:'1px solid rgba(245,240,232,.07)',borderRadius:4,padding:'36px 48px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:32,flexWrap:'wrap'}}>
           <div>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:8}}>Add-on</div>
-            <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:24,fontWeight:700,color:'#f5f0e8',letterSpacing:'-.03em',marginBottom:8}}>New Design — $3.99</h3>
+            <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:24,fontWeight:700,color:'#f5f0e8',letterSpacing:'-.03em',marginBottom:8}}>New Design, $3.99</h3>
             <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(245,240,232,.4)',fontWeight:300,maxWidth:480}}>
               Not feeling your current design? Get a completely new AI-generated portfolio. Different layout, different style, same content. Pay only when you want a change.
             </p>
@@ -175,7 +175,7 @@ export default function PricingPage() {
             whiteSpace:'nowrap',
             flexShrink:0,
           }}>
-            {loading === 'regen' ? 'Loading...' : 'Get new design — $3.99'}
+            {loading === 'regen' ? 'Loading...' : 'Get new design, $3.99'}
           </button>
         </div>
 

@@ -66,7 +66,7 @@ export default function FinanceTheme({ data }: { data: ParsedResume }) {
                   <ul className="space-y-3">
                     {exp.highlights.map((h, j) => (
                       <li key={j} className="text-gray-600 flex gap-3 text-sm font-sans leading-relaxed">
-                        <span className="text-yellow-500 mt-1 shrink-0">—</span>
+                        <span className="text-yellow-500 mt-1 shrink-0">-</span>
                         <span>{h}</span>
                       </li>
                     ))}

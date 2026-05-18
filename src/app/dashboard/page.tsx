@@ -56,8 +56,8 @@ export default async function DashboardPage() {
           </div>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:16,color:'rgba(245,240,232,.35)',fontWeight:300,lineHeight:1.75}}>
             {count > 0
-              ? count + ' portfolio' + (count > 1 ? 's' : '') + ' generated. Each one unique — designed by AI for your exact profession. Upload a new resume anytime to create another.'
-              : 'Upload your PDF resume and our AI will build a world-class portfolio website designed specifically for your profession — in under 60 seconds.'}
+              ? count + ' portfolio' + (count > 1 ? 's' : '') + ' generated. Each one unique, designed by AI for your exact profession. Upload a new resume anytime to create another.'
+              : 'Upload your PDF resume and our AI will build a world-class portfolio website designed specifically for your profession, in under 60 seconds.'}
           </div>
         </div>
 

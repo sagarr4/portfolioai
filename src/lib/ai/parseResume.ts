@@ -77,5 +77,7 @@ export async function parseResume(resumeText: string): Promise<ParsedResume> {
   if (content.type !== 'text') throw new Error('Unexpected response type')
 
   const clean = content.text.replace(/```json|```/g, '').trim()
-  return JSON.parse(clean) as ParsedResume
+  // em dash cleanup
+    const cleaned = clean.replace(/—/g, '-').replace(/\s+-\s+/g, ', ')
+    return JSON.parse(cleaned) as ParsedResume
 }

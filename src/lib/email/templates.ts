@@ -20,7 +20,7 @@ export function email24h(name: string, portfolioUrl: string) {
             You uploaded your resume yesterday and our AI built you a world-class portfolio website. But it's still locked in preview mode.
           </p>
           <p style="font-size:16px;color:rgba(245,240,232,.6);line-height:1.65;margin:0 0 32px;font-weight:300;">
-            For <strong style="color:#c9a96e;">just $4.99</strong> — less than a coffee — you can:
+            For <strong style="color:#c9a96e;">just $4.99</strong>, less than a coffee, you can:
           </p>
           <ul style="font-size:15px;color:rgba(245,240,232,.7);line-height:1.9;margin:0 0 36px;padding-left:20px;">
             <li>Launch it as a public URL forever</li>
@@ -120,7 +120,7 @@ export function email7d(name: string, portfolioUrl: string) {
             <strong style="color:#c9a96e;">$4.99 to launch it.</strong> That's it. No subscription. No catch.
           </p>
           <p style="font-size:16px;color:rgba(245,240,232,.7);line-height:1.65;margin:0 0 36px;font-weight:400;font-style:italic;">
-            "I got a recruiter message 8 hours after launching." — recent user
+            "I got a recruiter message 8 hours after launching.", recent user
           </p>
           <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
             <tr><td style="background:#c9a96e;border-radius:4px;">

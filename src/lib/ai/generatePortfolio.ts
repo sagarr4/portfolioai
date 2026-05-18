@@ -28,7 +28,7 @@ export async function generatePortfolioHTML(data: ParsedResume): Promise<string>
     '- ' + p.name + ': ' + p.description + ' [' + (p.tech||[]).join(', ') + ']'
   ).join('\n')
 
-  const prompt = `You are the world's greatest portfolio website creator — a hybrid of Apple design team, Pentagram, and a senior full-stack engineer. You build portfolios so extraordinary that recruiters screenshot them.
+  const prompt = `You are the world's greatest portfolio website creator, a hybrid of Apple design team, Pentagram, and a senior full-stack engineer. You build portfolios so extraordinary that recruiters screenshot them.
 
 PERSON DATA:
 Name: ${data.name}
@@ -65,18 +65,18 @@ MANDATORY REQUIREMENTS:
 CONTENT REQUIREMENTS:
 - Rewrite EVERY achievement as a powerful impact statement with action verbs and quantified results
 - Rewrite bio to be compelling first-person
-- Skills shown visually — NOT a plain list
+- Skills shown visually, NOT a plain list
 - Contact section with email CTA
 - Footer: "Built with PortfolioAI"
-- No placeholder images — use CSS gradients, shapes, initials
+- No placeholder images, use CSS gradients, shapes, initials
 
 CREATIVE REQUIREMENTS:
-- Hero must be UNIQUE and memorable — not just name plus title plus bio
+- Hero must be UNIQUE and memorable, not just name plus title plus bio
 - Each section must have a different visual treatment
 - Include at least one unexpected creative detail: oversized text, asymmetric layout, animated element, creative skill visualization, large background numbers
 - Color palette must feel intentional and premium
-- Luxurious spacing — generous padding, thoughtful rhythm
-- Typography hierarchy — at least 3 distinct sizes
+- Luxurious spacing, generous padding, thoughtful rhythm
+- Typography hierarchy, at least 3 distinct sizes
 
 OUTPUT: Return ONLY the complete HTML. No explanation. No markdown fences. Start with <!DOCTYPE html> end with </html>.`
 

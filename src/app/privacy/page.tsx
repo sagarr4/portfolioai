@@ -8,7 +8,7 @@ export default function PrivacyPage() {
         <p style={{fontSize:13,color:'rgba(245,240,232,.3)',marginBottom:48}}>Last updated: May 2026</p>
         {[
           {h:'What we collect',p:'We collect your email address when you sign up, your resume PDF when you upload it, and basic usage data to improve the product. We do not sell your data to anyone.'},
-          {h:'How we use your data',p:'Your resume is used solely to generate your portfolio website. We store it securely in Supabase. Your email is used to send you important account updates only — no spam.'},
+          {h:'How we use your data',p:'Your resume is used solely to generate your portfolio website. We store it securely in Supabase. Your email is used to send you important account updates only, no spam.'},
           {h:'Resume data',p:'Your resume text is sent to Anthropic\'s Claude API to generate your portfolio. Anthropic does not train their models on API data. Your resume is not shared with any other third party.'},
           {h:'Payments',p:'Payments are processed by Stripe. We never see or store your credit card details. Stripe is PCI-DSS compliant.'},
           {h:'Cookies',p:'We use essential cookies for authentication only. We do not use tracking or advertising cookies.'},

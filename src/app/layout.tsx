@@ -13,7 +13,7 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'PortfolioAI — Turn Your Resume Into a World-Class Portfolio Website',
+  title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio Website',
   description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 60 seconds. Designed specifically for your profession. Used by 2,000+ job seekers.',
   keywords: 'portfolio website, AI portfolio generator, resume to portfolio, free portfolio website, job seeker portfolio, software engineer portfolio, UX designer portfolio',
   authors: [{ name: 'PortfolioAI' }],
@@ -25,18 +25,18 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://portfolioai.company',
     siteName: 'PortfolioAI',
-    title: 'PortfolioAI — Turn Your Resume Into a World-Class Portfolio Website',
+    title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio Website',
     description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 60 seconds. Designed specifically for your profession.',
     images: [{
       url: '/og-image.png',
       width: 1200,
       height: 630,
-      alt: 'PortfolioAI — AI-Powered Portfolio Generator',
+      alt: 'PortfolioAI, AI-Powered Portfolio Generator',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PortfolioAI — Turn Your Resume Into a World-Class Portfolio',
+    title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio',
     description: 'Upload your resume. Get a world-class portfolio in 60 seconds.',
     images: ['/og-image.png'],
     creator: '@portfolioai',

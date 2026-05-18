@@ -130,8 +130,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 <div id="pai-wall">
   <div id="pai-badge">✦ Preview Locked</div>
   <h2>Unlock your full portfolio</h2>
-  <p>Launch it as a live URL for <strong>$4.99</strong> — one time, yours forever. Share with recruiters, add to LinkedIn, get hired faster.</p>
-  <a id="pai-pay" href="${pricingUrl}">Launch my portfolio — $4.99 →</a>
+  <p>Launch it as a live URL for <strong>$4.99</strong>, one time, yours forever. Share with recruiters, add to LinkedIn, get hired faster.</p>
+  <a id="pai-pay" href="${pricingUrl}">Launch my portfolio, $4.99 →</a>
   <a id="pai-own" href="/auth/signup">or build your own free</a>
 </div>
 <script>

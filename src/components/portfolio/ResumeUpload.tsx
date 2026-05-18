@@ -72,7 +72,7 @@ export default function ResumeUpload() {
     idle: { h: 'Upload your resume', p: 'Drag and drop your PDF, or click to browse' },
     uploading: { h: 'Uploading...', p: 'Securely transferring your file' },
     parsing: { h: 'Reading your resume...', p: 'Extracting your experience, skills and achievements' },
-    generating: { h: 'Building your portfolio...', p: 'Designing a world-class site for your profession — takes about 30 seconds' },
+    generating: { h: 'Building your portfolio...', p: 'Designing a world-class site for your profession, takes about 30 seconds' },
     done: { h: 'Portfolio ready!', p: 'Opening your portfolio now...' },
   }
 

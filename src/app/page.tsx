@@ -60,7 +60,7 @@ export default function LandingPage() {
         .ttrack{display:flex;width:max-content;animation:t 38s linear infinite}
         @keyframes t{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
         .titem{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.18);padding:0 52px;white-space:nowrap;display:flex;align-items:center;gap:52px}
-        .titem::after{content:'—';color:rgba(201,169,110,.28)}
+        .titem::after{content:'-';color:rgba(201,169,110,.28)}
         .SEC{padding:160px 72px;max-width:1300px;margin:0 auto}
         .SEC2{padding:0 72px 160px;max-width:1300px;margin:0 auto}
         .DARK{background:#080705;border-top:1px solid rgba(245,240,232,.05);border-bottom:1px solid rgba(245,240,232,.05)}
@@ -169,10 +169,10 @@ export default function LandingPage() {
         </h1>
         <div className={"vline hi"+(loaded?" go":"")} style={{transitionDelay:'.38s'}}/>
         <p className={"hsub hi"+(loaded?" go":"")} style={{transitionDelay:'.46s'}}>
-          Upload your PDF resume and receive a world-class portfolio website — designed specifically for your profession — in under 60 seconds.
+          Upload your PDF resume and receive a world-class portfolio website, designed specifically for your profession, in under 60 seconds.
         </p>
         <div className={"hbtns hi"+(loaded?" go":"")} style={{transitionDelay:'.56s'}}>
-          <Link href="/auth/signup" className="bgold">Build my portfolio — free</Link>
+          <Link href="/auth/signup" className="bgold">Build my portfolio, free</Link>
           <Link href="/auth/login" className="bghost">Sign in</Link>
         </div>
         <div className={"htrust hi"+(loaded?" go":"")} style={{transitionDelay:'.66s'}}>
@@ -199,7 +199,7 @@ export default function LandingPage() {
           </div>
           <div className="r d2 BT">
             <div className="grule"/>
-            <p>Most portfolio builders hand you a template and leave you to figure it out. <strong>PortfolioAI is fundamentally different.</strong> Every portfolio is generated from scratch — unique design, unique copy, unique structure — built specifically for who you are.</p>
+            <p>Most portfolio builders hand you a template and leave you to figure it out. <strong>PortfolioAI is fundamentally different.</strong> Every portfolio is generated from scratch, unique design, unique copy, unique structure, built specifically for who you are.</p>
             <p>The result looks like you hired a senior designer and a professional copywriter. Because effectively, you did.</p>
           </div>
         </div>
@@ -209,8 +209,8 @@ export default function LandingPage() {
         <div className="ey r">The process</div>
         <div className="sgrid r d1">
           {[
-            {n:'01',h:'Upload your resume',p:'Drop your PDF resume — any format, any length, any career stage. Our AI reads everything: your roles, achievements, skills, education, and the story between the lines.'},
-            {n:'02',h:'AI builds your site',p:'Claude — one of the most capable AI systems in existence — reads your resume, rewrites your achievements as impact statements, detects your profession, and generates a fully bespoke portfolio.'},
+            {n:'01',h:'Upload your resume',p:'Drop your PDF resume, any format, any length, any career stage. Our AI reads everything: your roles, achievements, skills, education, and the story between the lines.'},
+            {n:'02',h:'AI builds your site',p:'Claude, one of the most capable AI systems in existence, reads your resume, rewrites your achievements as impact statements, detects your profession, and generates a fully bespoke portfolio.'},
             {n:'03',h:'Publish and get hired',p:'You receive a live, shareable URL in under 60 seconds. Send it to recruiters, link it on LinkedIn, put it in your email signature. Your career now has a home worthy of it.'},
           ].map((s,i) => (
             <div key={i} className="ST">
@@ -264,7 +264,7 @@ export default function LandingPage() {
             <h2 className="DH">Real people.<br/><em>Real results.</em></h2>
           </div>
           <div className="r d2 BT">
-            <p>From new graduates to senior professionals with decades of experience — PortfolioAI has helped people across every industry present themselves at the highest level.</p>
+            <p>From new graduates to senior professionals with decades of experience, PortfolioAI has helped people across every industry present themselves at the highest level.</p>
           </div>
         </div>
         <div className="tgrid">
@@ -304,14 +304,14 @@ export default function LandingPage() {
             <div className="ptag">Best value</div>
             <div className="ptier">Bundle</div>
             <div className="ppr">$9.99</div>
-            <div className="pmo">one-time — save 30%</div>
+            <div className="pmo">one-time, save 30%</div>
             <div className="prule"/>
             <ul className="plist">
               {['Launch portfolio live','3 design regenerations','Public URL forever','No monthly fees','Share with recruiters'].map((f,i) => (
                 <li key={i}><span className="pck">+</span>{f}</li>
               ))}
             </ul>
-            <Link href="/pricing" className="pabtn pb2">Get Bundle — $9.99</Link>
+            <Link href="/pricing" className="pabtn pb2">Get Bundle, $9.99</Link>
           </div>
           <div className="PL">
             <div className="ptier">Launch</div>
@@ -323,7 +323,7 @@ export default function LandingPage() {
                 <li key={i}><span className="pck">+</span>{f}</li>
               ))}
             </ul>
-            <Link href="/pricing" className="pabtn pb3">Launch — $4.99</Link>
+            <Link href="/pricing" className="pabtn pb3">Launch, $4.99</Link>
           </div>
         </div>
       </section>
@@ -336,7 +336,7 @@ export default function LandingPage() {
         </h2>
         <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:18,fontWeight:300,color:'rgba(245,240,232,.38)',marginBottom:56,position:'relative',zIndex:1}}>No design skills. No technical knowledge. No templates. Just your resume.</p>
         <Link href="/auth/signup" className="bgold" style={{display:'inline-block',fontSize:16,padding:'19px 56px',position:'relative',zIndex:1}}>
-          Build my portfolio — free
+          Build my portfolio, free
         </Link>
       </div>
 

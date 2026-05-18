@@ -17,7 +17,7 @@ export default function CreativeTheme({ data }: { data: ParsedResume }) {
         </div>
       </nav>
 
-      {/* HERO — magazine spread */}
+      {/* HERO, magazine spread */}
       <section className="min-h-screen pt-24 flex flex-col justify-end pb-16">
         <div className="max-w-6xl mx-auto px-8 w-full">
           <div className="border-t-4 border-gray-900 pt-8">
@@ -39,7 +39,7 @@ export default function CreativeTheme({ data }: { data: ParsedResume }) {
         </div>
       </section>
 
-      {/* EXPERIENCE — editorial layout */}
+      {/* EXPERIENCE, editorial layout */}
       <section id="work" className="py-24 bg-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-8">
           <h2 className="text-6xl font-black italic mb-16 tracking-tight">Work</h2>

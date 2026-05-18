@@ -108,7 +108,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
             </button>
           ) : (
             <button onClick={handlePublish} disabled={publishing} className="btn btn-green">
-              {publishing ? 'Updating...' : '✓ Published — Republish'}
+              {publishing ? 'Updating...' : '✓ Published, Republish'}
             </button>
           )}
         </div>
@@ -135,7 +135,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
               {portfolio.is_published ? 'Live' : 'Draft'}
             </span>
             <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300}}>
-              {portfolio.is_published ? '— your portfolio is public' : '— publish to make it live'}
+              {portfolio.is_published ? '- your portfolio is public' : '- publish to make it live'}
             </span>
           </div>
           {portfolio.views > 0 && (
@@ -183,7 +183,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
               <ul style={{paddingLeft:0,margin:0,listStyle:'none',display:'flex',flexDirection:'column',gap:6}}>
                 {exp.highlights?.map((h: string, j: number) => (
                   <li key={j} style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.38)',lineHeight:1.7,fontWeight:300,paddingLeft:16,position:'relative'}}>
-                    <span style={{position:'absolute',left:0,color:'#c9a96e',opacity:.5}}>—</span>
+                    <span style={{position:'absolute',left:0,color:'#c9a96e',opacity:.5}}>-</span>
                     {h}
                   </li>
                 ))}
@@ -234,7 +234,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         {/* REGEN INFO */}
         <div style={{marginTop:24,padding:'20px 24px',background:'rgba(245,240,232,.02)',border:'1px solid rgba(245,240,232,.05)',borderRadius:4}}>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.25)',lineHeight:1.7,fontWeight:300}}>
-            <span style={{color:'rgba(201,169,110,.5)',fontWeight:500}}>Tip:</span> Use Regenerate to get a completely new design — different layout, different style, same content. Each generation is unique. Takes about 30-60 seconds.
+            <span style={{color:'rgba(201,169,110,.5)',fontWeight:500}}>Tip:</span> Use Regenerate to get a completely new design, different layout, different style, same content. Each generation is unique. Takes about 30-60 seconds.
           </div>
         </div>
 
