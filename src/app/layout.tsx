@@ -14,7 +14,7 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio Website',
-  description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 60 seconds. Designed specifically for your profession. Used by 2,000+ job seekers.',
+  description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 2 minutes. Designed specifically for your profession. Used by 2,000+ job seekers.',
   keywords: 'portfolio website, AI portfolio generator, resume to portfolio, free portfolio website, job seeker portfolio, software engineer portfolio, UX designer portfolio',
   authors: [{ name: 'PortfolioAI' }],
   creator: 'PortfolioAI',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: 'https://portfolioai.company',
     siteName: 'PortfolioAI',
     title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio Website',
-    description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 60 seconds. Designed specifically for your profession.',
+    description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 2 minutes. Designed specifically for your profession.',
     images: [{
       url: '/og-image.png',
       width: 1200,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio',
-    description: 'Upload your resume. Get a world-class portfolio in 60 seconds.',
+    description: 'Upload your resume. Get a world-class portfolio in 2 minutes.',
     images: ['/og-image.png'],
     creator: '@portfolioai',
   },
@@ -71,7 +71,7 @@ export default function RootLayout({
           "@type": "WebApplication",
           "name": "PortfolioAI",
           "url": "https://portfolioai.company",
-          "description": "AI-powered portfolio website generator. Upload your resume and get a world-class portfolio in 60 seconds.",
+          "description": "AI-powered portfolio website generator. Upload your resume and get a world-class portfolio in 2 minutes.",
           "applicationCategory": "BusinessApplication",
           "operatingSystem": "Web",
           "offers": {

@@ -234,7 +234,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         {/* REGEN INFO */}
         <div style={{marginTop:24,padding:'20px 24px',background:'rgba(245,240,232,.02)',border:'1px solid rgba(245,240,232,.05)',borderRadius:4}}>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.25)',lineHeight:1.7,fontWeight:300}}>
-            <span style={{color:'rgba(201,169,110,.5)',fontWeight:500}}>Tip:</span> Use Regenerate to get a completely new design, different layout, different style, same content. Each generation is unique. Takes about 30-60 seconds.
+            <span style={{color:'rgba(201,169,110,.5)',fontWeight:500}}>Tip:</span> Use Regenerate to get a completely new design, different layout, different style, same content. Each generation is unique. Takes about 60-90 seconds.
           </div>
         </div>
 

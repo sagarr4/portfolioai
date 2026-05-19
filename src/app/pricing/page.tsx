@@ -51,7 +51,7 @@ export default function PricingPage() {
           <div style={{maxWidth: 800, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap'}}>
             <span style={{fontSize: 18}}>✨</span>
             <span style={{fontSize: 15, color: '#f5f0e8', fontWeight: 500}}>
-              Almost there — <strong style={{color: '#c9a96e'}}>Launch your portfolio for $4.99</strong> to create another one
+              Almost there , <strong style={{color: '#c9a96e'}}>Launch your portfolio for $4.99</strong> to create another one
             </span>
           </div>
         </div>

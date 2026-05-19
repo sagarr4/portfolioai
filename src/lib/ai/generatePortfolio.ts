@@ -82,7 +82,7 @@ OUTPUT: Return ONLY the complete HTML. No explanation. No markdown fences. Start
 
   const message = await client.messages.create({
     model: 'claude-opus-4-7',
-    max_tokens: 16000,
+    max_tokens: 20000,
     messages: [{ role: 'user', content: prompt }],
   })
 

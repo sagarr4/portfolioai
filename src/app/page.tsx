@@ -169,7 +169,7 @@ export default function LandingPage() {
         </h1>
         <div className={"vline hi"+(loaded?" go":"")} style={{transitionDelay:'.38s'}}/>
         <p className={"hsub hi"+(loaded?" go":"")} style={{transitionDelay:'.46s'}}>
-          Upload your PDF resume and receive a world-class portfolio website, designed specifically for your profession, in under 60 seconds.
+          Upload your PDF resume and receive a world-class portfolio website, designed specifically for your profession, in under 2 minutes.
         </p>
         <div className={"hbtns hi"+(loaded?" go":"")} style={{transitionDelay:'.56s'}}>
           <Link href="/auth/signup" className="bgold">Build my portfolio, free</Link>
@@ -177,7 +177,7 @@ export default function LandingPage() {
         </div>
         <div className={"htrust hi"+(loaded?" go":"")} style={{transitionDelay:'.66s'}}>
           <span>No credit card required</span><span className="tdot"/>
-          <span>Ready in 60 seconds</span><span className="tdot"/>
+          <span>Ready in 2 minutes</span><span className="tdot"/>
           <span>Unique design every time</span>
         </div>
       </section>
@@ -211,7 +211,7 @@ export default function LandingPage() {
           {[
             {n:'01',h:'Upload your resume',p:'Drop your PDF resume, any format, any length, any career stage. Our AI reads everything: your roles, achievements, skills, education, and the story between the lines.'},
             {n:'02',h:'AI builds your site',p:'Claude, one of the most capable AI systems in existence, reads your resume, rewrites your achievements as impact statements, detects your profession, and generates a fully bespoke portfolio.'},
-            {n:'03',h:'Publish and get hired',p:'You receive a live, shareable URL in under 60 seconds. Send it to recruiters, link it on LinkedIn, put it in your email signature. Your career now has a home worthy of it.'},
+            {n:'03',h:'Publish and get hired',p:'You receive a live, shareable URL in under 2 minutes. Send it to recruiters, link it on LinkedIn, put it in your email signature. Your career now has a home worthy of it.'},
           ].map((s,i) => (
             <div key={i} className="ST">
               <div className="sn">{s.n}</div>
