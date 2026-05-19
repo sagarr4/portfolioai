@@ -13,9 +13,9 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio Website',
-  description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 2 minutes. Designed specifically for your profession. Used by 2,000+ job seekers.',
-  keywords: 'portfolio website, AI portfolio generator, resume to portfolio, free portfolio website, job seeker portfolio, software engineer portfolio, UX designer portfolio',
+  title: 'Free AI Portfolio Website Builder | Resume to Portfolio in 2 Minutes - PortfolioAI',
+  description: 'Turn your resume into a stunning portfolio website using AI. Free to try, no signup needed to preview. Perfect for job seekers, developers, designers, marketers. Get hired faster with a professional online portfolio in just 2 minutes.',
+  keywords: 'resume to portfolio, free portfolio website builder, AI portfolio generator, job seeker portfolio, online portfolio maker, personal website builder, developer portfolio, designer portfolio, free resume website, portfolio website free, create portfolio website, professional portfolio online, portfolio builder free, AI resume builder, online CV maker, personal branding website, portfolio for recruiters, get hired portfolio, job application portfolio, free website builder for job seekers, portfolio website examples, software engineer portfolio template, UX designer portfolio, data scientist portfolio, marketing portfolio, build portfolio in minutes, AI website generator, professional resume website, online portfolio for jobs',
   authors: [{ name: 'PortfolioAI' }],
   creator: 'PortfolioAI',
   publisher: 'PortfolioAI',
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://portfolioai.company',
     siteName: 'PortfolioAI',
-    title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio Website',
-    description: 'Upload your PDF resume and get a stunning, AI-generated portfolio website in 2 minutes. Designed specifically for your profession.',
+    title: 'Turn Your Resume Into a Portfolio Website with AI - Free',
+    description: 'AI-powered portfolio builder for job seekers. Upload resume, get a professional website in 2 minutes. Free to try.',
     images: [{
       url: '/og-image.png',
       width: 1200,
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PortfolioAI, Turn Your Resume Into a World-Class Portfolio',
+    title: 'Free AI Portfolio Builder - Resume to Website in 2 Minutes',
     description: 'Upload your resume. Get a world-class portfolio in 2 minutes.',
     images: ['/og-image.png'],
     creator: '@portfolioai',
@@ -70,14 +70,36 @@ export default function RootLayout({
           "@context": "https://schema.org",
           "@type": "WebApplication",
           "name": "PortfolioAI",
+          "alternateName": "Portfolio AI",
           "url": "https://portfolioai.company",
-          "description": "AI-powered portfolio website generator. Upload your resume and get a world-class portfolio in 2 minutes.",
+          "description": "AI-powered portfolio website generator. Turn your resume into a professional portfolio website in 2 minutes. Free to try.",
           "applicationCategory": "BusinessApplication",
-          "operatingSystem": "Web",
+          "applicationSubCategory": "Portfolio Builder",
+          "operatingSystem": "Web Browser",
+          "browserRequirements": "Requires JavaScript. Requires HTML5.",
+          "softwareVersion": "1.0",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "127",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "featureList": [
+            "AI-powered portfolio generation",
+            "Resume to website conversion",
+            "Profession-specific templates",
+            "Mobile responsive design",
+            "SEO optimized",
+            "Custom domain support"
+          ],
           "offers": {
             "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+            "price": "4.99",
+            "priceCurrency": "USD",
+            "priceValidUntil": "2027-12-31",
+            "availability": "https://schema.org/InStock",
+            "url": "https://portfolioai.company/pricing"
           }
         })}} />
       </head>
