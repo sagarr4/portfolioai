@@ -41,17 +41,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   const pricingUrl = '/pricing?portfolio_id=' + portfolioId
 
   const paywall = `<style>
-  /* Limit body to first viewport height visually */
+  html, body { overflow: hidden !important; height: 100vh !important; }
   body::after {
     content: "";
     position: fixed;
-    top: 90vh;
+    top: 70vh;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(8,8,6,0) 0%, rgba(8,8,6,0.7) 10%, rgba(8,8,6,0.98) 25%, #080806 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(to bottom, rgba(8,8,6,0) 0%, rgba(8,8,6,0.6) 8%, rgba(8,8,6,0.98) 25%, #080806 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     z-index: 99997;
     pointer-events: none;
   }
@@ -67,7 +67,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     padding: 40px 48px;
     max-width: 520px;
     width: calc(100% - 40px);
-    box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(201,169,110,.1);
+    box-shadow: 0 24px 80px rgba(0,0,0,.6);
     font-family: 'DM Sans', system-ui, sans-serif;
     text-align: center;
   }
@@ -100,15 +100,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     transition: background .2s;
   }
   #pai-pay:hover { background: #dbb97e; }
-  #pai-own {
-    display: inline-block;
-    font-size: 12px;
-    color: rgba(245,240,232,.35);
-    text-decoration: none;
-    margin-top: 14px;
-    letter-spacing: .03em;
-  }
-  #pai-own:hover { color: rgba(245,240,232,.6); }
   #pai-badge {
     display: inline-block;
     background: rgba(201,169,110,.1);
@@ -128,59 +119,39 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   }
 </style>
 <div id="pai-wall">
-  <div id="pai-badge">✦ Preview Locked</div>
-  <h2>Unlock your full portfolio</h2>
-  <p>Launch it as a live URL for <strong>$4.99</strong>, one time, yours forever. Share with recruiters, add to LinkedIn, get hired faster.</p>
-  <a id="pai-pay" href="${pricingUrl}">Launch my portfolio, $4.99 →</a>
-  <a id="pai-own" href="/auth/signup">or build your own free</a>
+  <div id="pai-badge">Preview Mode</div>
+  <h2>Like what you see?</h2>
+  <p>Publish your portfolio as a live URL for <strong>$4.99</strong> one time. Yours forever. No subscription.</p>
+  <a id="pai-pay" href="${pricingUrl}">Publish for $4.99 →</a>
 </div>
 <script>
   (function(){
-    var maxScroll = window.innerHeight * 0.9;
-    var locked = false;
+    // Lock scroll IMMEDIATELY - no scrolling at all on unpaid previews
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     
-    function lockScroll() {
-      if (locked) return;
-      locked = true;
-      document.body.style.position = 'fixed';
-      document.body.style.top = '-' + window.scrollY + 'px';
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
-    }
-    
-    function checkScroll() {
-      if (window.scrollY >= maxScroll && !locked) {
-        window.scrollTo({ top: maxScroll, behavior: 'instant' });
-        lockScroll();
-      }
-    }
-    
-    window.addEventListener('scroll', checkScroll, { passive: true });
-    window.addEventListener('wheel', function(e) {
-      if (window.scrollY >= maxScroll - 50) {
-        e.preventDefault();
-        lockScroll();
-      }
+    window.addEventListener('scroll', function(e){
+      window.scrollTo(0, 0);
     }, { passive: false });
     
-    window.addEventListener('touchmove', function(e) {
-      if (window.scrollY >= maxScroll - 50) {
-        lockScroll();
-      }
-    }, { passive: true });
+    window.addEventListener('wheel', function(e){
+      e.preventDefault();
+    }, { passive: false });
     
-    // Disable right click
-    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+    window.addEventListener('touchmove', function(e){
+      e.preventDefault();
+    }, { passive: false });
     
-    // Disable keyboard shortcuts
     document.addEventListener('keydown', function(e){
-      if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's' || e.key === 'p' || e.key === 'End')) {
+      if (['ArrowDown','ArrowUp','PageDown','PageUp','End','Home',' '].includes(e.key)) {
         e.preventDefault();
       }
-      if (e.key === 'End' || e.key === 'PageDown') {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's' || e.key === 'p')) {
         e.preventDefault();
       }
     });
+    
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   })();
 </script>`
 

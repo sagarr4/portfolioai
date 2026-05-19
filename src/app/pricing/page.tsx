@@ -40,6 +40,22 @@ export default function PricingPage() {
 
   return (
     <div style={{minHeight:'100vh',background:'#0c0a08',color:'#f5f0e8'}}>
+      {reason === 'upload_limit' && (
+        <div style={{
+          background: 'linear-gradient(90deg, rgba(201,169,110,.15), rgba(201,169,110,.08))',
+          borderBottom: '1px solid rgba(201,169,110,.3)',
+          padding: '20px 24px',
+          textAlign: 'center',
+          fontFamily: "'DM Sans', sans-serif"
+        }}>
+          <div style={{maxWidth: 800, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap'}}>
+            <span style={{fontSize: 18}}>✨</span>
+            <span style={{fontSize: 15, color: '#f5f0e8', fontWeight: 500}}>
+              Almost there — <strong style={{color: '#c9a96e'}}>Launch your portfolio for $4.99</strong> to create another one
+            </span>
+          </div>
+        </div>
+      )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}

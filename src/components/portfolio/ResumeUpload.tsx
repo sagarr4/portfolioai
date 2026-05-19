@@ -33,11 +33,10 @@ export default function ResumeUpload() {
 
       const data = await res.json()
       if (!res.ok) {
-        if (data.error === 'UPGRADE_REQUIRED') {
+        if (data.error === 'PAYMENT_REQUIRED' || data.error === 'UPGRADE_REQUIRED') {
           setStatus('idle')
-          if (confirm(data.message + '\n\nUpgrade now?')) {
-            window.location.href = '/pricing'
-          }
+          toast.error(data.message || 'Payment required to create another portfolio')
+          setTimeout(() => { window.location.href = '/pricing?reason=upload_limit' }, 1500)
           return
         }
         toast.error(data.error || 'Failed')
