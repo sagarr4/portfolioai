@@ -7,51 +7,45 @@ import { NextResponse } from 'next/server'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-function emailTemplate(name: string, portfolioUrl: string) {
+function emailTemplate(name: string) {
   return {
-    subject: `${name}, your portfolio is waiting`,
+    subject: `${name}, quick favor`,
     html: `
 <!DOCTYPE html>
 <html>
-<body style="margin:0;padding:0;background:#0c0a08;font-family:'Helvetica Neue',Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0c0a08;padding:48px 24px;">
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:40px 20px;">
     <tr><td align="center">
-      <table width="540" cellpadding="0" cellspacing="0" style="background:#100e0a;border:1px solid rgba(245,240,232,.08);border-radius:6px;padding:48px 40px;">
-        <tr><td>
-          <div style="font-size:24px;font-weight:700;color:#f5f0e8;margin-bottom:8px;letter-spacing:-.02em;">
-            Portfolio<span style="color:#c9a96e;">AI</span>
-          </div>
-          <div style="width:40px;height:2px;background:#c9a96e;margin:24px 0 32px;"></div>
-          <h1 style="font-size:26px;font-weight:700;color:#f5f0e8;margin:0 0 16px;letter-spacing:-.02em;line-height:1.2;">
-            Hey ${name},
-          </h1>
-          <p style="font-size:16px;color:rgba(245,240,232,.6);line-height:1.65;margin:0 0 20px;font-weight:300;">
-            You uploaded your resume to PortfolioAI and our AI built you a world-class portfolio website.
+      <table width="540" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:6px;padding:40px;">
+        <tr><td style="font-size:15px;line-height:1.6;color:#1a1a1a;">
+          <p style="margin:0 0 16px;">Hey ${name},</p>
+          
+          <p style="margin:0 0 16px;">Sagar here. You signed up to PortfolioAI back when I was testing it out, and I wanted to drop you a personal note.</p>
+          
+          <p style="margin:0 0 16px;">Your portfolio is still sitting in preview mode. I am trying to hit my first 10 paying customers this week and was hoping you would help me out.</p>
+          
+          <p style="margin:0 0 16px;"><strong>$4.99 one time</strong>, no subscription. You get a live URL forever, no watermark, no expiry. Less than a coffee.</p>
+          
+          <p style="margin:0 0 24px;">
+            <a href="https://portfolioai.company/dashboard" style="display:inline-block;background:#c9a96e;color:#1a1a1a;padding:14px 28px;border-radius:4px;font-weight:600;text-decoration:none;font-size:15px;">
+              Publish my portfolio — $4.99
+            </a>
           </p>
-          <p style="font-size:16px;color:rgba(245,240,232,.6);line-height:1.65;margin:0 0 24px;font-weight:300;">
-            But it is still locked in preview mode. For <strong style="color:#c9a96e;">just $4.99 one time</strong> you can publish it as a live URL, share it with recruiters, and use it to land your next job.
-          </p>
-          <p style="font-size:16px;color:rgba(245,240,232,.6);line-height:1.65;margin:0 0 24px;font-weight:300;">
-            Less than a coffee. Yours forever.
-          </p>
-          <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
-            <tr><td style="background:#c9a96e;border-radius:4px;">
-              <a href="${portfolioUrl}" style="display:inline-block;padding:16px 32px;color:#0c0a08;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:.02em;">
-                Publish my portfolio → $4.99
-              </a>
-            </td></tr>
-          </table>
-          <p style="font-size:14px;color:rgba(245,240,232,.4);line-height:1.6;margin:0 0 8px;font-weight:300;">
-            One-time payment. No subscription. Yours forever.
-          </p>
-          <p style="font-size:14px;color:rgba(245,240,232,.4);line-height:1.6;margin:0;font-weight:300;">
-            Questions? Just reply to this email.
+          
+          <p style="margin:0 0 16px;">If money is tight or you are not interested, no pressure at all. But if you have 30 seconds and $5 to spare, this would genuinely mean a lot.</p>
+          
+          <p style="margin:0 0 16px;">Either way, thanks for being one of the early ones who tried it.</p>
+          
+          <p style="margin:0 0 8px;">Cheers,<br>Sagar</p>
+          <p style="margin:0;color:#888;font-size:13px;">Founder, PortfolioAI</p>
+          
+          <p style="margin:32px 0 0;font-size:13px;color:#999;border-top:1px solid #eee;padding-top:16px;">
+            P.S. Just hit reply if you have any questions, feedback, or just want to chat. This goes directly to my inbox.
           </p>
         </td></tr>
       </table>
-      <p style="font-size:11px;color:rgba(245,240,232,.2);margin-top:24px;letter-spacing:.05em;">
-        PortfolioAI · portfolioai.company<br>
-        You received this because you created a portfolio. Reply STOP to unsubscribe.
+      <p style="font-size:11px;color:#aaa;margin-top:16px;">
+        portfolioai.company
       </p>
     </td></tr>
   </table>
@@ -62,7 +56,6 @@ function emailTemplate(name: string, portfolioUrl: string) {
 }
 
 export async function POST(request: Request) {
-  // Secret check - only you can trigger this
   const auth = request.headers.get('authorization')
   if (auth !== 'Bearer ' + process.env.CRON_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -73,7 +66,6 @@ export async function POST(request: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  // Get all unpaid users with portfolios
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id, email, full_name')
@@ -89,44 +81,33 @@ export async function POST(request: Request) {
       continue
     }
 
-    // Has portfolio?
     const { data: portfolios } = await supabase
-      .from('portfolios')
-      .select('slug')
-      .eq('user_id', profile.id)
-      .limit(1)
-    
+      .from('portfolios').select('slug').eq('user_id', profile.id).limit(1)
     if (!portfolios?.[0]) {
       skipped.push(profile.email + ' (no portfolio)')
       continue
     }
 
-    // Already paid?
     const { count: paymentCount } = await supabase
-      .from('payments')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', profile.id)
-
+      .from('payments').select('*', { count: 'exact', head: true }).eq('user_id', profile.id)
     if ((paymentCount || 0) > 0) {
       skipped.push(profile.email + ' (already paid)')
       continue
     }
 
     const name = profile.full_name?.split(' ')[0] || 'there'
-    const portfolioUrl = 'https://portfolioai.company/dashboard'
-    const { subject, html } = emailTemplate(name, portfolioUrl)
+    const { subject, html } = emailTemplate(name)
 
     try {
       await resend.emails.send({
-        from: 'Sagar from PortfolioAI <hello@portfolioai.company>',
+        from: 'Sagar <hello@portfolioai.company>',
         replyTo: 'sagarbmw1@gmail.com',
         to: profile.email,
         subject,
         html,
       })
       sent.push(profile.email)
-      // Rate limit safety - 1 second between sends
-      await new Promise(r => setTimeout(r, 1000))
+      await new Promise(r => setTimeout(r, 600))
     } catch (err: any) {
       failed.push(profile.email + ': ' + err.message)
     }
@@ -138,6 +119,5 @@ export async function POST(request: Request) {
     skipped: skipped.length,
     sentTo: sent,
     failedTo: failed,
-    skippedFrom: skipped,
   })
 }
