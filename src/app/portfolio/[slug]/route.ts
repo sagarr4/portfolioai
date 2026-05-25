@@ -160,6 +160,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     display: inline-block; font-size: 12px; color: rgba(245,240,232,.4);
     text-decoration: none; margin-top: 12px;
   }
+  #pai-expire {
+    font-size: 11px;
+    color: rgba(245,240,232,.35);
+    margin: -8px 0 14px;
+    font-weight: 400;
+    letter-spacing: .04em;
+    font-family: 'DM Sans', sans-serif;
+  }
   #pai-badge {
     display: inline-block; background: rgba(201,169,110,.1);
     border: 1px solid rgba(201,169,110,.25); color: #c9a96e;
@@ -174,10 +182,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 <!-- watermark -->
 <div id="pai-wall">
   <div id="pai-badge">Preview</div>
+  <p id="pai-expire">Preview expires in 72 hours</p>
   <h2>Like what you see?</h2>
   <p>Build your own world-class portfolio from your resume. <strong>Free to try.</strong></p>
   <a id="pai-pay" href="/auth/signup">Build my own portfolio , Free</a>
-  <a id="pai-own" href="/">Made with PortfolioAI →</a>
+  
 </div>
 <!-- end watermark -->
 <script>
