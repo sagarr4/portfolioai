@@ -2,6 +2,7 @@ export const runtime = 'nodejs'
 import { createClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { applyBlurGate } from '@/lib/portfolio/blurGate'
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -72,7 +73,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   const pricingUrl = '/pricing?portfolio_id=' + portfolioId
 
   // OWNER view - full preview with bottom bar (let them see what they get)
-  if (isOwner) {
+  const portfolioAgeMs = Date.now() - new Date(data.created_at).getTime()
+  const FIVE_MINUTES = 5 * 60 * 1000
+  const isFreshlyGenerated = portfolioAgeMs < FIVE_MINUTES
+  
+  // Owner gets full preview for first 5 minutes (the "wow moment"), then blur kicks in
+  if (isOwner && isFreshlyGenerated) {
     const ownerBar = `<style>
   body { padding-bottom: 80px; }
   #pai-bottom-bar {
@@ -229,114 +235,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   }
   
   // VISITOR view (not owner, not paid) - show full hero then lock
-  const visitorPaywall = `<style>
-  html, body { overflow: hidden !important; }
-  body { max-height: 100vh !important; position: relative; }
-  
-  /* Blur everything below the hero (first viewport) */
-  body::after {
-    content: "";
-    position: fixed;
-    top: 100vh; left: 0; right: 0; bottom: -100vh;
-    background: #080806;
-    z-index: 99996;
-    pointer-events: none;
-  }
-  
-  /* Gradient fade at bottom of hero */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 75vh; left: 0; right: 0; height: 25vh;
-    background: linear-gradient(to bottom, rgba(8,8,6,0) 0%, rgba(8,8,6,0.7) 40%, rgba(8,8,6,1) 100%);
-    z-index: 99996;
-    pointer-events: none;
-  }
-  
-  #pai-wall {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99999;
-    background: #0c0a08;
-    border: 1px solid rgba(201,169,110,.4);
-    border-radius: 8px;
-    padding: 32px 40px;
-    max-width: 480px;
-    width: calc(100% - 40px);
-    box-shadow: 0 24px 80px rgba(0,0,0,.6);
-    font-family: 'DM Sans', sans-serif;
-    text-align: center;
-  }
-  #pai-wall h2 {
-    font-size: 22px; font-weight: 700; color: #f5f0e8;
-    margin: 0 0 8px; letter-spacing: -.02em; line-height: 1.2;
-  }
-  #pai-wall p {
-    font-size: 14px; color: rgba(245,240,232,.55);
-    margin: 0 0 20px; line-height: 1.5;
-  }
-  #pai-wall p strong { color: #c9a96e; font-weight: 600; }
-  #pai-pay {
-    display: block; background: #c9a96e; color: #0c0a08;
-    padding: 13px 28px; border-radius: 4px; font-size: 14px;
-    font-weight: 700; text-decoration: none;
-  }
-  #pai-pay:hover { background: #dbb97e; }
-  #pai-own {
-    display: inline-block; font-size: 12px; color: rgba(245,240,232,.4);
-    text-decoration: none; margin-top: 12px;
-  }
-  #pai-expire {
-    font-size: 11px;
-    color: rgba(245,240,232,.35);
-    margin: -8px 0 14px;
-    font-weight: 400;
-    letter-spacing: .04em;
-    font-family: 'DM Sans', sans-serif;
-  }
-  #pai-badge {
-    display: inline-block; background: rgba(201,169,110,.1);
-    border: 1px solid rgba(201,169,110,.25); color: #c9a96e;
-    font-size: 10px; font-weight: 700; letter-spacing: .15em;
-    text-transform: uppercase; padding: 5px 11px; border-radius: 2px; margin-bottom: 14px;
-  }
-  @media(max-width:600px){
-    #pai-wall{padding:24px 20px;bottom:16px}
-    #pai-wall h2{font-size:18px}
-  }
-</style>
-<!-- watermark -->
-<div id="pai-wall">
-  <div id="pai-badge">Preview</div>
-  <p id="pai-expire">Preview expires in 72 hours</p>
-  <h2>Like what you see?</h2>
-  <p>Build your own world-class portfolio from your resume. <strong>Free to try.</strong></p>
-  <a id="pai-pay" href="/auth/signup">Build my own portfolio , Free</a>
-  
-</div>
-<!-- end watermark -->
-<script>
-  (function(){
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    window.addEventListener('scroll', function(){ window.scrollTo(0,0); });
-    window.addEventListener('wheel', function(e){ e.preventDefault(); }, { passive: false });
-    window.addEventListener('touchmove', function(e){ e.preventDefault(); }, { passive: false });
-    document.addEventListener('keydown', function(e){
-      if (['ArrowDown','ArrowUp','PageDown','PageUp','End','Home',' '].includes(e.key)) e.preventDefault();
-      if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 's' || e.key === 'p')) e.preventDefault();
-    });
-    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-  })();
-</script>`
-
-  html = html.includes('</body>') ? html.replace('</body>', visitorPaywall + '</body>') : html + visitorPaywall
+  const ageHours = Math.floor((Date.now() - new Date(data.created_at).getTime()) / (1000 * 60 * 60))
+  const hoursRemaining = Math.max(0, 72 - ageHours)
+  const gatedHtml = applyBlurGate(html, portfolioId, hoursRemaining)
 
   await supabase.from('portfolios').update({ views: (data.views || 0) + 1 }).eq('id', data.id)
 
-  return new NextResponse(html, {
+  return new NextResponse(gatedHtml, {
     status: 200,
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Robots-Tag': 'noindex' }
   })
