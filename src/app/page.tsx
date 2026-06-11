@@ -269,9 +269,9 @@ export default function LandingPage() {
         </div>
         <div className="tgrid">
           {[
-            {q:'I uploaded my resume on a Tuesday evening. By Wednesday morning I had heard from three recruiters. The portfolio looked like I had paid an agency thousands of dollars for it.',name:'Aisha M.',role:'Senior UX Designer, Toronto'},
-            {q:'After five years away from the workforce, I had no idea how to present myself. PortfolioAI built me something that made me look current, confident and completely professional. I had an offer within three weeks.',name:'Sandra K.',role:'Registered Nurse, London'},
-            {q:'I have spent 18 years in investment banking and never had a personal website. What I received looked like a bespoke agency had studied my entire career and built something just for me.',name:'James T.',role:'Managing Director, New York'},
+            {q:'I uploaded my resume and 90 seconds later I had a portfolio that felt designed specifically for my data science work. Honestly cleaner than what I would have built myself in a weekend on Wix.',name:'Jatin Sethi',role:'Data Science Graduate, Delhi'},
+            {q:'I was skeptical AI could capture what I actually do, but the portfolio understood my ML projects and presented them as case studies. The terminal aesthetic for my engineering work was a nice touch I would not have thought of.',name:'Krinal Khakharia',role:'Computing Science Student, BC'},
+            {q:'Tried three other portfolio builders before this. PortfolioAI was the only one that read my resume properly and built something that actually looked professional without any tweaking on my end.',name:'Smit Shah',role:'Software Developer, Mumbai'},
           ].map((t,i) => (
             <div key={i} className={"TC r d"+(i+1)}>
               <div className="tqbig">"</div>
