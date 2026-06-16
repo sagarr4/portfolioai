@@ -73,7 +73,7 @@ export async function POST(request: Request) {
 
   for (const profile of profiles || []) {
     if (!profile.email) continue
-    if (profile.email === 'sagarbmw1@gmail.com') {
+    if (profile.email === 'sagarbmw1@gmail.com' || profile.email === 'hello@portfolioai.company' || profile.email === 'sagar@portfolioai.company') {
       skipped.push(profile.email + ' (owner)')
       continue
     }
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
     try {
       await resend.emails.send({
         from: 'Sagar <hello@portfolioai.company>',
-        replyTo: 'sagarbmw1@gmail.com',
+        replyTo: 'hello@portfolioai.company',
         to: profile.email,
         subject,
         html,

@@ -28,7 +28,7 @@ export async function GET(request: Request) {
 
   async function sendEmail(user: any, template: (n: string, u: string) => any, column: string, counter: 'e24' | 'e3d' | 'e7d') {
     if (!user.email) return
-    if (user.email === 'sagarbmw1@gmail.com') return
+    if (user.email === 'sagarbmw1@gmail.com' || user.email === 'hello@portfolioai.company' || user.email === 'sagar@portfolioai.company') return
 
     const { data: portfolios } = await supabase
       .from('portfolios').select('slug').eq('user_id', user.id).limit(1)
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
     try {
       await resend.emails.send({
         from: 'Sagar <hello@portfolioai.company>',
-        replyTo: 'sagarbmw1@gmail.com',
+        replyTo: 'hello@portfolioai.company',
         to: user.email,
         subject,
         html,

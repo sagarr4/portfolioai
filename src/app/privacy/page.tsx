@@ -12,8 +12,8 @@ export default function PrivacyPage() {
           {h:'Resume data',p:'Your resume text is sent to Anthropic\'s Claude API to generate your portfolio. Anthropic does not train their models on API data. Your resume is not shared with any other third party.'},
           {h:'Payments',p:'Payments are processed by Stripe. We never see or store your credit card details. Stripe is PCI-DSS compliant.'},
           {h:'Cookies',p:'We use essential cookies for authentication only. We do not use tracking or advertising cookies.'},
-          {h:'Your rights',p:'You can delete your account and all associated data at any time by emailing us at privacy@portfolioai.company. We will process your request within 30 days.'},
-          {h:'Contact',p:'For privacy questions: privacy@portfolioai.company'},
+          {h:'Your rights',p:'You can delete your account and all associated data at any time by emailing us at hello@portfolioai.company. We will process your request within 30 days.'},
+          {h:'Contact',p:'For privacy questions: hello@portfolioai.company'},
         ].map((s,i) => (
           <div key={i} style={{marginBottom:40,paddingBottom:40,borderBottom:'1px solid rgba(245,240,232,.06)'}}>
             <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',marginBottom:12,letterSpacing:'-.02em'}}>{s.h}</h2>

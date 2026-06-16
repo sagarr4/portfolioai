@@ -14,7 +14,7 @@ export default function TermsPage() {
           {h:'Prohibited use',p:'You may not use PortfolioAI to generate portfolios containing false information, impersonate others, or violate any laws. We reserve the right to remove any portfolio that violates these terms.'},
           {h:'Service availability',p:'We aim for 99.9% uptime but cannot guarantee uninterrupted service. We are not liable for any losses caused by service downtime.'},
           {h:'Changes',p:'We may update these terms at any time. Continued use of the service constitutes acceptance of the updated terms.'},
-          {h:'Contact',p:'For terms questions: legal@portfolioai.company'},
+          {h:'Contact',p:'For terms questions: hello@portfolioai.company'},
         ].map((s,i) => (
           <div key={i} style={{marginBottom:40,paddingBottom:40,borderBottom:'1px solid rgba(245,240,232,.06)'}}>
             <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',marginBottom:12,letterSpacing:'-.02em'}}>{s.h}</h2>
