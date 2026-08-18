@@ -12,8 +12,9 @@ export default function ResumeUpload() {
   const [fileName, setFileName] = useState('')
   const [progress, setProgress] = useState(0)
   const [elapsed, setElapsed] = useState(0)
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
-  // Live countdown timer
   useEffect(() => {
     if (status === 'idle' || status === 'done') {
       setElapsed(0)
@@ -35,9 +36,11 @@ export default function ResumeUpload() {
 
     const formData = new FormData()
     formData.append('resume', file)
+    if (photoFile) {
+      formData.append('photo', photoFile)
+    }
 
     try {
-      // Stage transitions with realistic timing
       setTimeout(() => { setStatus('parsing'); setProgress(20) }, 800)
       setTimeout(() => setProgress(35), 5000)
       setTimeout(() => { setStatus('generating'); setProgress(50) }, 8000)
@@ -73,7 +76,7 @@ export default function ResumeUpload() {
       setStatus('idle')
       setProgress(0)
     }
-  }, [router])
+  }, [router, photoFile])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -93,22 +96,58 @@ export default function ResumeUpload() {
   const msg = msgs[status]
   const isProcessing = status !== 'idle' && status !== 'done'
   const isDone = status === 'done'
-  
-  // Format time as MM:SS
+
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60)
     const s = secs % 60
     return `${m}:${s.toString().padStart(2, '0')}`
   }
 
-  // Estimated time remaining
-  const getRemaining = () => {
-    if (elapsed < 120) return Math.max(120 - elapsed, 5)
-    return Math.max(150 - elapsed, 3)
+  function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]
+    if (!f) return
+    if (!f.type.startsWith('image/')) {
+      toast.error('Please choose an image file')
+      return
+    }
+    if (f.size > 8 * 1024 * 1024) {
+      toast.error('Photo must be under 8MB')
+      return
+    }
+    setPhotoFile(f)
+    setPhotoPreview(URL.createObjectURL(f))
   }
 
   return (
     <div style={{ width: '100%', maxWidth: 600, fontFamily: "'DM Sans',sans-serif" }}>
+
+      {status === 'idle' && (
+        <div style={{ marginBottom: 16, textAlign: 'center' }}>
+          <label style={{
+            fontSize: 13,
+            color: photoFile ? '#c9a96e' : 'rgba(245,240,232,.4)',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '8px 16px',
+            border: '1px solid ' + (photoFile ? 'rgba(201,169,110,.3)' : 'rgba(245,240,232,.1)'),
+            borderRadius: 3,
+          }}>
+            {photoPreview && (
+              <img src={photoPreview} alt="" style={{ width: 22, height: 22, borderRadius: 4, objectFit: 'cover' }} />
+            )}
+            {photoFile ? 'Photo added: ' + photoFile.name : '+ Add a professional photo (optional)'}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoSelect}
+              style={{ display: 'none' }}
+            />
+          </label>
+        </div>
+      )}
+
       <div
         {...getRootProps()}
         style={{
@@ -134,16 +173,15 @@ export default function ResumeUpload() {
         <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.03em', color: '#f5f0e8', marginBottom: 10, fontFamily: "'Playfair Display',serif" }}>
           {msg.h}
         </h3>
-        
+
         <p style={{ fontSize: 14, color: 'rgba(245,240,232,.35)', fontWeight: 300, lineHeight: 1.65, marginBottom: isProcessing ? 16 : 28 }}>
           {isProcessing ? fileName : msg.p}
         </p>
-        
+
         {isProcessing && (
           <>
             <p style={{ fontSize: 13, color: '#c9a96e', marginBottom: 24 }}>{msg.p}</p>
-            
-            {/* Countdown Timer */}
+
             <div style={{
               display: 'flex',
               alignItems: 'center',

@@ -1,8 +1,13 @@
 export const runtime = 'nodejs'
+export const maxDuration = 120
+
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { extractTextFromPdf } from '@/lib/ai/extractPdf'
 import { parseResume } from '@/lib/ai/parseResume'
 import { generatePortfolioHTML } from '@/lib/ai/generatePortfolio'
+import { processPhoto } from '@/lib/portfolio/enhancePhoto'
+import { pickHueFamily } from '@/lib/portfolio/theme'
 import { NextResponse } from 'next/server'
 
 const WATERMARK = '<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;gap:16px;"><span style="font-size:13px;color:rgba(245,240,232,.7);">Preview only, <strong style="color:#c9a96e;font-weight:600;">Launch for $4.99</strong> to share</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:9px 22px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;">Launch now</a></div><!-- end watermark -->'
@@ -13,15 +18,13 @@ export async function POST(request: Request) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    // STRICT PAYMENT ENFORCEMENT
-    const allowedEmails = (process.env.ALLOWED_EMAILS || '').split(',').map(e => e.trim().toLowerCase())
+    const allowedEmails = (process.env.ALLOWED_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean)
     const userEmail = (user.email || '').toLowerCase()
     const isWhitelisted = allowedEmails.includes(userEmail)
 
     console.log('Upload check - User:', userEmail, 'Whitelisted:', isWhitelisted)
 
     if (!isWhitelisted) {
-      // Count existing portfolios
       const { count: portfolioCount, error: countError } = await supabase
         .from('portfolios')
         .select('*', { count: 'exact', head: true })
@@ -30,7 +33,6 @@ export async function POST(request: Request) {
       console.log('Portfolio count for user:', portfolioCount, 'Error:', countError?.message)
 
       if ((portfolioCount || 0) >= 1) {
-        // Check if user has ANY successful payment
         const { data: payments, error: payError } = await supabase
           .from('payments')
           .select('id, type')
@@ -47,9 +49,8 @@ export async function POST(request: Request) {
           }, { status: 402 })
         }
 
-        // Check plan limits for paid users
         const launchPayments = payments.filter(p => p.type === 'launch' || p.type === 'bundle').length
-        const maxAllowed = launchPayments + 1 // 1 free + 1 per launch payment
+        const maxAllowed = launchPayments + 1
 
         if ((portfolioCount || 0) >= maxAllowed) {
           return NextResponse.json({
@@ -66,6 +67,10 @@ export async function POST(request: Request) {
     if (file.type !== 'application/pdf') return NextResponse.json({ error: 'PDF only' }, { status: 400 })
     if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Max 5MB' }, { status: 400 })
 
+    // Photo is optional, collected in the same initial form
+    const photoFile = formData.get('photo') as File | null
+    const hasValidPhoto = !!(photoFile && photoFile.size > 0 && photoFile.type.startsWith('image/') && photoFile.size <= 8 * 1024 * 1024)
+
     const buffer = Buffer.from(await file.arrayBuffer())
     const text = await extractTextFromPdf(buffer)
     if (!text || text.trim().length < 50) {
@@ -73,39 +78,125 @@ export async function POST(request: Request) {
     }
 
     const parsed = await parseResume(text)
-    let htmlContent = await generatePortfolioHTML(parsed)
-
-    htmlContent = htmlContent.includes('</body>')
-      ? htmlContent.replace('</body>', WATERMARK + '</body>')
-      : htmlContent + WATERMARK
 
     const slug = parsed.name.toLowerCase()
       .replace(/[^a-z0-9\s]/g, '')
       .replace(/\s+/g, '-')
       .slice(0, 50) + '-' + Date.now()
 
+    // One seed, computed once, reused for BOTH the photo's background hue and
+    // the site's color/hero synthesis -- guarantees they always match
+    const seed = Date.now() % 10000
+
+    // Insert the row first (empty html_content placeholder) so we have a real
+    // portfolio.id to key photo storage paths off of, same convention as
+    // the standalone /api/enhance-photo route already uses
     const { data: portfolio, error: dbError } = await supabase
       .from('portfolios')
       .insert({
         user_id: user.id,
         title: parsed.name + "'s Portfolio",
         slug,
+        seed,
         field: parsed.field,
         field_confidence: parsed.field_confidence,
         theme: parsed.theme,
         portfolio_data: parsed,
-        html_content: htmlContent,
+        html_content: '',
         is_published: false,
       })
       .select()
       .single()
 
-    if (dbError) {
+    if (dbError || !portfolio) {
       console.error('DB error:', dbError)
       return NextResponse.json({ error: 'Failed to save' }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, portfolio, parsed })
+    let photoUrl: string | undefined = undefined
+
+    if (hasValidPhoto) {
+      try {
+        const serviceSupabase = createServiceClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.SUPABASE_SERVICE_ROLE_KEY!
+        )
+
+        await serviceSupabase.from('portfolios').update({ photo_status: 'processing' }).eq('id', portfolio.id)
+
+        const photoBytes = await photoFile!.arrayBuffer()
+        const photoBuffer = Buffer.from(photoBytes)
+        const mimeType = photoFile!.type
+
+        const originalPath = user.id + '/' + portfolio.id + '/original.jpg'
+        const { error: uploadError } = await serviceSupabase.storage
+          .from('portfolio-photos')
+          .upload(originalPath, photoBuffer, { contentType: mimeType, upsert: true })
+
+        if (!uploadError) {
+          const { data: originalUrlData } = serviceSupabase.storage
+            .from('portfolio-photos')
+            .getPublicUrl(originalPath)
+
+          await serviceSupabase.from('portfolios')
+            .update({ photo_original_url: originalUrlData.publicUrl })
+            .eq('id', portfolio.id)
+
+          const hueFamily = pickHueFamily(seed)
+          const result = await processPhoto(photoBuffer, mimeType, hueFamily)
+
+          if (result) {
+            const contentType = result.extension === 'jpg' ? 'image/jpeg' : 'image/png'
+            const enhancedPath = user.id + '/' + portfolio.id + '/enhanced.' + result.extension
+            const { error: enhancedUploadError } = await serviceSupabase.storage
+              .from('portfolio-photos')
+              .upload(enhancedPath, result.buffer, { contentType, upsert: true })
+
+            if (!enhancedUploadError) {
+              const { data: enhancedUrlData } = serviceSupabase.storage
+                .from('portfolio-photos')
+                .getPublicUrl(enhancedPath)
+              photoUrl = enhancedUrlData.publicUrl
+              await serviceSupabase.from('portfolios').update({
+                photo_enhanced_url: photoUrl,
+                photo_status: 'ready'
+              }).eq('id', portfolio.id)
+            } else {
+              photoUrl = originalUrlData.publicUrl
+              await serviceSupabase.from('portfolios').update({ photo_status: 'ready' }).eq('id', portfolio.id)
+            }
+          } else {
+            photoUrl = originalUrlData.publicUrl
+            await serviceSupabase.from('portfolios').update({ photo_status: 'ready' }).eq('id', portfolio.id)
+          }
+        } else {
+          await serviceSupabase.from('portfolios').update({ photo_status: 'failed' }).eq('id', portfolio.id)
+        }
+      } catch (photoErr) {
+        // Photo processing must NEVER block portfolio creation
+        console.error('Initial-generation photo processing failed, continuing without photo:', photoErr)
+      }
+    }
+
+    let htmlContent = await generatePortfolioHTML(parsed, { seed, photoUrl })
+
+    htmlContent = htmlContent.includes('</body>')
+      ? htmlContent.replace('</body>', WATERMARK + '</body>')
+      : htmlContent + WATERMARK
+
+    const { data: finalPortfolio, error: updateError } = await supabase
+      .from('portfolios')
+      .update({ html_content: htmlContent })
+      .eq('id', portfolio.id)
+      .select()
+      .single()
+
+    if (updateError) {
+      console.error('DB update error:', updateError)
+      return NextResponse.json({ error: 'Failed to save generated portfolio' }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true, portfolio: finalPortfolio, parsed })
   } catch (err) {
     console.error('Error:', err)
     return NextResponse.json({ error: 'Failed to process resume' }, { status: 500 })

@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import PhotoUpload from '@/components/portfolio/PhotoUpload'
 
 export default function PortfolioEditPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -125,6 +126,29 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
           <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:52,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1.0,marginBottom:12}}>{parsed?.name}</h1>
           <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:18,color:'#c9a96e',fontWeight:400,marginBottom:16,letterSpacing:'-.01em'}}>{parsed?.title}</p>
           <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,color:'rgba(245,240,232,.38)',fontWeight:300,maxWidth:620,lineHeight:1.75}}>{parsed?.summary}</p>
+        </div>
+
+        {/* PHOTO */}
+        <div className="info-card" style={{marginBottom:16}}>
+          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:10,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.25)',marginBottom:20}}>Photo</div>
+          {portfolio.photo_status === 'ready' ? (
+            <div style={{display:'flex',alignItems:'center',gap:16}}>
+              {(portfolio.photo_enhanced_url || portfolio.photo_original_url) && (
+                <img src={portfolio.photo_enhanced_url || portfolio.photo_original_url} alt="Portfolio photo" style={{width:64,height:64,borderRadius:8,objectFit:'cover'}} />
+              )}
+              <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.5)',fontWeight:300}}>
+                Photo added. Click <strong style={{color:'#c9a96e'}}>Regenerate</strong> above to include it in a new design.
+              </p>
+            </div>
+          ) : portfolio.photo_status === 'skipped' ? (
+            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300}}>No photo added.</p>
+          ) : (
+            <PhotoUpload
+              portfolioId={id}
+              onComplete={(photoUrl: string) => setPortfolio((p: any) => ({ ...p, photo_status: 'ready', photo_enhanced_url: photoUrl }))}
+              onSkip={() => setPortfolio((p: any) => ({ ...p, photo_status: 'skipped' }))}
+            />
+          )}
         </div>
 
         {/* STATUS */}
