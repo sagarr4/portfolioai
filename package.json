@@ -39,5 +39,12 @@
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "sharp@0.32.6": true,
+    "sharp@0.34.5": true,
+    "sharp@0.35.3": true,
+    "onnxruntime-node@1.17.3": true,
+    "unrs-resolver@1.11.1": true
   }
 }
