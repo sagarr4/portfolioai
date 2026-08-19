@@ -6,13 +6,23 @@
 //      credits, network issue), fall back to local background removal
 //      (@imgly/background-removal-node) -- fully offline, always works
 //
+// IMPORTANT: @imgly/background-removal-node is imported DYNAMICALLY inside
+// removeBackgroundLocal, not at module top-level. Its native ONNX runtime
+// binary can fail to load in some serverless environments (confirmed on
+// Vercel production, Aug 2026 -- libonnxruntime.so failed to load). A
+// static top-level import means that failure crashes this ENTIRE module,
+// taking down every route that imports processPhoto -- including plain
+// resume uploads with no photo attached. A dynamic import inside the
+// existing try/catch contains the failure to just this function: it
+// degrades gracefully (returns null, no photo processed) instead of
+// breaking resume upload entirely.
+//
 // LICENSE NOTE: @imgly/background-removal-node is AGPL-licensed. Free to
 // use, but AGPL's network-use clause can require sharing related source
 // when run as part of a paid network service. IMG.LY sells a commercial
 // license as an alternative (support@img.ly) -- worth revisiting before
 // any funding, acquisition, or enterprise-contract due diligence.
 
-import { removeBackground as imglyRemoveBackground } from '@imgly/background-removal-node'
 import sharp from 'sharp'
 
 async function normalizeRotation(imageBuffer: Buffer): Promise<Buffer> {
@@ -67,6 +77,7 @@ async function generativeRetouch(imageBuffer: Buffer, mimeType: string, hueFamil
 
 async function removeBackgroundLocal(imageBuffer: Buffer, mimeType: string): Promise<Buffer | null> {
   try {
+    const { removeBackground: imglyRemoveBackground } = await import('@imgly/background-removal-node')
     const blob = new Blob([Uint8Array.from(imageBuffer)], { type: mimeType })
     const resultBlob = await imglyRemoveBackground(blob)
     const arrayBuffer = await resultBlob.arrayBuffer()
