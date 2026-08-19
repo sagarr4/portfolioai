@@ -6,16 +6,19 @@
 //      credits, network issue), fall back to local background removal
 //      (@imgly/background-removal-node) -- fully offline, always works
 //
-// IMPORTANT: @imgly/background-removal-node is imported DYNAMICALLY inside
-// removeBackgroundLocal, not at module top-level. Its native ONNX runtime
-// binary can fail to load in some serverless environments (confirmed on
-// Vercel production, Aug 2026 -- libonnxruntime.so failed to load). A
-// static top-level import means that failure crashes this ENTIRE module,
-// taking down every route that imports processPhoto -- including plain
-// resume uploads with no photo attached. A dynamic import inside the
-// existing try/catch contains the failure to just this function: it
-// degrades gracefully (returns null, no photo processed) instead of
-// breaking resume upload entirely.
+// IMPORTANT: both sharp AND @imgly/background-removal-node are imported
+// DYNAMICALLY inside their respective functions, never at module
+// top-level. Both ship native platform binaries (libvips, ONNX runtime)
+// that have been confirmed to fail loading in Vercel's serverless
+// environment (Aug 2026 incident -- onnxruntime failed first, then
+// sharp's libvips failed immediately after that fix shipped). A static
+// top-level import means ANY such failure crashes this ENTIRE module --
+// and therefore every route that imports processPhoto, including plain
+// resume uploads with no photo attached. Dynamic imports inside each
+// function's existing try/catch contain failures locally instead:
+// normalizeRotation falls back to the original unrotated buffer,
+// removeBackgroundLocal returns null (no photo processed) -- neither one
+// takes down resume upload anymore.
 //
 // LICENSE NOTE: @imgly/background-removal-node is AGPL-licensed. Free to
 // use, but AGPL's network-use clause can require sharing related source
@@ -23,10 +26,9 @@
 // license as an alternative (support@img.ly) -- worth revisiting before
 // any funding, acquisition, or enterprise-contract due diligence.
 
-import sharp from 'sharp'
-
 async function normalizeRotation(imageBuffer: Buffer): Promise<Buffer> {
   try {
+    const sharp = (await import('sharp')).default
     return await sharp(imageBuffer).rotate().toBuffer()
   } catch (err) {
     console.error('Rotation normalize threw, using original buffer:', err)
