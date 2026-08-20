@@ -1,5 +1,5 @@
 export const runtime = 'nodejs'
-export const maxDuration = 120
+export const maxDuration = 300
 
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createServiceClient } from '@supabase/supabase-js'
@@ -13,6 +13,9 @@ import { NextResponse } from 'next/server'
 const WATERMARK = '<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;gap:16px;"><span style="font-size:13px;color:rgba(245,240,232,.7);">Preview only, <strong style="color:#c9a96e;font-weight:600;">Launch for $4.99</strong> to share</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:9px 22px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;">Launch now</a></div><!-- end watermark -->'
 
 export async function POST(request: Request) {
+  const t0 = Date.now()
+  const elapsed = () => ((Date.now() - t0) / 1000).toFixed(1) + 's'
+
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -67,9 +70,10 @@ export async function POST(request: Request) {
     if (file.type !== 'application/pdf') return NextResponse.json({ error: 'PDF only' }, { status: 400 })
     if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Max 5MB' }, { status: 400 })
 
-    // Photo is optional, collected in the same initial form
     const photoFile = formData.get('photo') as File | null
     const hasValidPhoto = !!(photoFile && photoFile.size > 0 && photoFile.type.startsWith('image/') && photoFile.size <= 8 * 1024 * 1024)
+
+    console.log('[timing] request parsed, photo attached:', hasValidPhoto, '-', elapsed())
 
     const buffer = Buffer.from(await file.arrayBuffer())
     const text = await extractTextFromPdf(buffer)
@@ -77,20 +81,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Could not read PDF text' }, { status: 400 })
     }
 
+    console.log('[timing] PDF text extracted -', elapsed())
+
     const parsed = await parseResume(text)
+
+    console.log('[timing] resume parsed (Haiku) -', elapsed())
 
     const slug = parsed.name.toLowerCase()
       .replace(/[^a-z0-9\s]/g, '')
       .replace(/\s+/g, '-')
       .slice(0, 50) + '-' + Date.now()
 
-    // One seed, computed once, reused for BOTH the photo's background hue and
-    // the site's color/hero synthesis -- guarantees they always match
     const seed = Date.now() % 10000
 
-    // Insert the row first (empty html_content placeholder) so we have a real
-    // portfolio.id to key photo storage paths off of, same convention as
-    // the standalone /api/enhance-photo route already uses
     const { data: portfolio, error: dbError } = await supabase
       .from('portfolios')
       .insert({
@@ -112,6 +115,8 @@ export async function POST(request: Request) {
       console.error('DB error:', dbError)
       return NextResponse.json({ error: 'Failed to save' }, { status: 500 })
     }
+
+    console.log('[timing] portfolio row inserted -', elapsed())
 
     let photoUrl: string | undefined = undefined
 
@@ -142,8 +147,12 @@ export async function POST(request: Request) {
             .update({ photo_original_url: originalUrlData.publicUrl })
             .eq('id', portfolio.id)
 
+          console.log('[timing] original photo uploaded -', elapsed())
+
           const hueFamily = pickHueFamily(seed)
           const result = await processPhoto(photoBuffer, mimeType, hueFamily)
+
+          console.log('[timing] processPhoto finished, mode:', result?.mode ?? 'null', '-', elapsed())
 
           if (result) {
             const contentType = result.extension === 'jpg' ? 'image/jpeg' : 'image/png'
@@ -169,16 +178,19 @@ export async function POST(request: Request) {
             photoUrl = originalUrlData.publicUrl
             await serviceSupabase.from('portfolios').update({ photo_status: 'ready' }).eq('id', portfolio.id)
           }
+
+          console.log('[timing] photo pipeline fully done -', elapsed())
         } else {
           await serviceSupabase.from('portfolios').update({ photo_status: 'failed' }).eq('id', portfolio.id)
         }
       } catch (photoErr) {
-        // Photo processing must NEVER block portfolio creation
         console.error('Initial-generation photo processing failed, continuing without photo:', photoErr)
       }
     }
 
     let htmlContent = await generatePortfolioHTML(parsed, { seed, photoUrl })
+
+    console.log('[timing] Opus hero generation finished -', elapsed())
 
     htmlContent = htmlContent.includes('</body>')
       ? htmlContent.replace('</body>', WATERMARK + '</body>')
@@ -195,6 +207,8 @@ export async function POST(request: Request) {
       console.error('DB update error:', updateError)
       return NextResponse.json({ error: 'Failed to save generated portfolio' }, { status: 500 })
     }
+
+    console.log('[timing] TOTAL request time -', elapsed())
 
     return NextResponse.json({ success: true, portfolio: finalPortfolio, parsed })
   } catch (err) {
