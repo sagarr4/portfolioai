@@ -9,9 +9,11 @@ export async function POST(request: Request) {
 
   const { type, portfolio_id } = await request.json()
 
+  // Single paid tier now -- 'bundle' is the internal type key kept
+  // as-is since its Stripe Price ID is already correctly configured
+  // for $9.99. Renaming it would mean touching Stripe config too;
+  // reusing it keeps this a display-copy change, not a payments change.
   const priceMap: Record<string, string> = {
-    launch: process.env.STRIPE_LAUNCH_PRICE_ID!,
-    regen: process.env.STRIPE_REGEN_PRICE_ID!,
     bundle: process.env.STRIPE_BUNDLE_PRICE_ID!,
   }
 

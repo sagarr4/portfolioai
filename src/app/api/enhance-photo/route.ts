@@ -49,6 +49,18 @@ export async function POST(request: Request) {
 
   await supabase.from('portfolios').update({ photo_status: 'processing' }).eq('id', portfolioId)
 
+  // CACHE-BUSTING: original.jpg and enhanced.<ext> are FIXED, deterministic
+  // paths per portfolio (upsert:true overwrites the same object every time
+  // a new photo is uploaded). That means re-uploading produces the exact
+  // same public URL as before -- which is exactly what lets a browser or
+  // CDN keep serving the OLD cached image at that URL after the new file
+  // has already overwritten it server-side. One timestamp per request,
+  // appended to every URL we store/return, makes each upload's URL unique
+  // so nothing can serve stale bytes under it. The storage object itself
+  // ignores the query string -- it still resolves to the same file -- this
+  // purely defeats caching.
+  const cacheBust = Date.now()
+
   const originalPath = user.id + '/' + portfolioId + '/original.jpg'
   const { error: uploadError } = await supabase.storage
     .from('portfolio-photos')
@@ -62,9 +74,10 @@ export async function POST(request: Request) {
   const { data: originalUrlData } = supabase.storage
     .from('portfolio-photos')
     .getPublicUrl(originalPath)
+  const originalUrl = originalUrlData.publicUrl + '?v=' + cacheBust
 
   await supabase.from('portfolios')
-    .update({ photo_original_url: originalUrlData.publicUrl })
+    .update({ photo_original_url: originalUrl })
     .eq('id', portfolioId)
 
   const seed = portfolio.seed ?? (new Date(portfolio.created_at).getTime() % 10000)
@@ -74,11 +87,11 @@ export async function POST(request: Request) {
 
   if (!result) {
     await supabase.from('portfolios').update({
-      photo_enhanced_url: originalUrlData.publicUrl,
+      photo_enhanced_url: originalUrl,
       photo_status: 'ready'
     }).eq('id', portfolioId)
 
-    return NextResponse.json({ success: true, photoUrl: originalUrlData.publicUrl, enhanced: false })
+    return NextResponse.json({ success: true, photoUrl: originalUrl, enhanced: false })
   }
 
   const contentType = result.extension === 'jpg' ? 'image/jpeg' : 'image/png'
@@ -89,21 +102,22 @@ export async function POST(request: Request) {
 
   if (enhancedUploadError) {
     await supabase.from('portfolios').update({
-      photo_enhanced_url: originalUrlData.publicUrl,
+      photo_enhanced_url: originalUrl,
       photo_status: 'ready'
     }).eq('id', portfolioId)
 
-    return NextResponse.json({ success: true, photoUrl: originalUrlData.publicUrl, enhanced: false })
+    return NextResponse.json({ success: true, photoUrl: originalUrl, enhanced: false })
   }
 
   const { data: enhancedUrlData } = supabase.storage
     .from('portfolio-photos')
     .getPublicUrl(enhancedPath)
+  const enhancedUrl = enhancedUrlData.publicUrl + '?v=' + cacheBust
 
   await supabase.from('portfolios').update({
-    photo_enhanced_url: enhancedUrlData.publicUrl,
+    photo_enhanced_url: enhancedUrl,
     photo_status: 'ready'
   }).eq('id', portfolioId)
 
-  return NextResponse.json({ success: true, photoUrl: enhancedUrlData.publicUrl, enhanced: true, mode: result.mode })
+  return NextResponse.json({ success: true, photoUrl: enhancedUrl, enhanced: true, mode: result.mode })
 }

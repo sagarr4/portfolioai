@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export default function PhotoUpload({
   portfolioId,
@@ -14,6 +14,12 @@ export default function PhotoUpload({
   const [uploading, setUploading] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  // Guards against an out-of-order response: if a second photo is picked
+  // before the first upload's request has resolved, a slower first
+  // response must never overwrite state after a faster, more recent
+  // upload already completed. Each call gets its own ticket; only the
+  // response matching the CURRENT ticket is ever applied.
+  const requestId = useRef(0)
 
   async function handleFile(file: File) {
     if (!file.type.startsWith('image/')) {
@@ -24,6 +30,8 @@ export default function PhotoUpload({
       setError('Image must be under 8MB')
       return
     }
+
+    const myRequestId = ++requestId.current
 
     setError(null)
     setPreview(URL.createObjectURL(file))
@@ -41,6 +49,8 @@ export default function PhotoUpload({
 
       const data = await res.json()
 
+      if (myRequestId !== requestId.current) return
+
       if (!res.ok || !data.success) {
         setError('Could not process photo -- continuing without one')
         setTimeout(() => onSkip(), 1500)
@@ -49,10 +59,11 @@ export default function PhotoUpload({
 
       onComplete(data.photoUrl)
     } catch {
+      if (myRequestId !== requestId.current) return
       setError('Something went wrong -- continuing without a photo')
       setTimeout(() => onSkip(), 1500)
     } finally {
-      setUploading(false)
+      if (myRequestId === requestId.current) setUploading(false)
     }
   }
 

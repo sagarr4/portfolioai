@@ -1,13 +1,25 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import PhotoUpload from '@/components/portfolio/PhotoUpload'
+import { ParsedResume } from '@/lib/ai/parseResume'
+
+interface Portfolio {
+  id: string
+  slug: string
+  field: string
+  theme: string
+  is_published: boolean
+  views: number
+  photo_status: string
+  photo_enhanced_url?: string
+  photo_original_url?: string
+  portfolio_data: ParsedResume
+}
 
 export default function PortfolioEditPage({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter()
-  const [portfolio, setPortfolio] = useState<any>(null)
+  const [portfolio, setPortfolio] = useState<Portfolio | null>(null)
   const [loading, setLoading] = useState(true)
-  const [regenerating, setRegenerating] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [copied, setCopied] = useState(false)
   const [id, setId] = useState('')
@@ -22,30 +34,10 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
     })
   }, [])
 
-  async function handleRegenerate() {
-    if (!confirm('This will create a completely new design. Continue?')) return
-    setRegenerating(true)
-    try {
-      const res = await fetch('/api/regenerate/' + id, { method: 'POST' })
-      const data = await res.json()
-      if (data.success) {
-        await fetch('/api/publish/' + id)
-        setPortfolio((p: any) => ({ ...p, is_published: true }))
-        alert('New portfolio generated!')
-        window.location.reload()
-      } else if (data.error === 'PAYMENT_REQUIRED') {
-          window.location.href = '/pricing?portfolio_id=' + id + '&reason=regen'
-      } else {
-        alert('Failed: ' + data.error)
-      }
-    } catch { alert('Something went wrong') }
-    setRegenerating(false)
-  }
-
   async function handlePublish() {
     setPublishing(true)
     await fetch('/api/publish/' + id)
-    setPortfolio((p: any) => ({ ...p, is_published: true }))
+    setPortfolio((p) => (p ? { ...p, is_published: true } : p))
     setPublishing(false)
   }
 
@@ -65,7 +57,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
     <div style={{minHeight:'100vh',background:'#0c0a08',display:'flex',alignItems:'center',justifyContent:'center'}}>
       <div style={{textAlign:'center'}}>
         <div style={{fontFamily:"'DM Sans',sans-serif",color:'rgba(245,240,232,.3)',fontSize:14,marginBottom:16}}>Portfolio not found</div>
-        <a href="/dashboard" style={{fontFamily:"'DM Sans',sans-serif",color:'#c9a96e',fontSize:13}}>Back to dashboard</a>
+        <Link href="/dashboard" style={{fontFamily:"'DM Sans',sans-serif",color:'#c9a96e',fontSize:13}}>Back to dashboard</Link>
       </div>
     </div>
   )
@@ -100,9 +92,6 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
           {portfolio.is_published && (
             <a href={liveUrl} target="_blank" className="btn btn-outline">View live ↗</a>
           )}
-          <button onClick={handleRegenerate} disabled={regenerating} className="btn btn-outline">
-            {regenerating ? '⟳ Generating new design...' : '⟳ Regenerate'}
-          </button>
           {!portfolio.is_published ? (
             <button onClick={handlePublish} disabled={publishing} className="btn btn-gold">
               {publishing ? 'Publishing...' : '↑ Publish portfolio'}
@@ -140,14 +129,10 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
                 Photo added. Click <strong style={{color:'#c9a96e'}}>Regenerate</strong> above to include it in a new design.
               </p>
             </div>
-          ) : portfolio.photo_status === 'skipped' ? (
-            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300}}>No photo added.</p>
           ) : (
-            <PhotoUpload
-              portfolioId={id}
-              onComplete={(photoUrl: string) => setPortfolio((p: any) => ({ ...p, photo_status: 'ready', photo_enhanced_url: photoUrl }))}
-              onSkip={() => setPortfolio((p: any) => ({ ...p, photo_status: 'skipped' }))}
-            />
+            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300,lineHeight:1.6}}>
+              No photo on this portfolio. Photos are added when you first upload your resume, since portfolios built with a photo from the start come out best -- create a new one from the dashboard to add one.
+            </p>
           )}
         </div>
 
@@ -197,7 +182,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         {/* EXPERIENCE */}
         <div className="info-card" style={{marginBottom:16}}>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:10,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.25)',marginBottom:24}}>Experience</div>
-          {parsed?.experience?.map((exp: any, i: number) => (
+          {parsed?.experience?.map((exp: ParsedResume['experience'][number], i: number) => (
             <div key={i} style={{marginBottom:28,paddingBottom:28,borderBottom:i < parsed.experience.length-1 ? '1px solid rgba(245,240,232,.05)' : 'none'}}>
               <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:6,gap:16}}>
                 <div style={{fontFamily:"'Playfair Display',serif",fontSize:17,fontWeight:700,color:'#f5f0e8',letterSpacing:'-.02em'}}>{exp.role}</div>
@@ -220,7 +205,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         {parsed?.projects?.length > 0 && (
           <div className="info-card" style={{marginBottom:16}}>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:10,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.25)',marginBottom:24}}>Projects</div>
-            {parsed.projects.map((proj: any, i: number) => (
+            {parsed.projects.map((proj: NonNullable<ParsedResume['projects']>[number], i: number) => (
               <div key={i} style={{marginBottom:20,paddingBottom:20,borderBottom:i < parsed.projects.length-1 ? '1px solid rgba(245,240,232,.05)' : 'none'}}>
                 <div style={{fontFamily:"'Playfair Display',serif",fontSize:16,fontWeight:700,color:'#f5f0e8',marginBottom:6}}>{proj.name}</div>
                 <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.38)',marginBottom:10,fontWeight:300,lineHeight:1.65}}>{proj.description}</div>
@@ -250,16 +235,9 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
           </div>
           {!portfolio.is_published && (
             <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:'rgba(245,240,232,.2)',marginTop:12,fontWeight:300,lineHeight:1.6}}>
-              Click "Publish portfolio" above to make this URL live.
+              Click &quot;Publish portfolio&quot; above to make this URL live.
             </p>
           )}
-        </div>
-
-        {/* REGEN INFO */}
-        <div style={{marginTop:24,padding:'20px 24px',background:'rgba(245,240,232,.02)',border:'1px solid rgba(245,240,232,.05)',borderRadius:4}}>
-          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.25)',lineHeight:1.7,fontWeight:300}}>
-            <span style={{color:'rgba(201,169,110,.5)',fontWeight:500}}>Tip:</span> Use Regenerate to get a completely new design, different layout, different style, same content. Each generation is unique. Takes about 60-90 seconds.
-          </div>
         </div>
 
       </div>

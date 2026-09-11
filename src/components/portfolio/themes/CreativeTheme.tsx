@@ -114,7 +114,7 @@ export default function CreativeTheme({ data }: { data: ParsedResume }) {
       <section id="contact" className="py-32 text-center">
         <div className="max-w-2xl mx-auto px-8">
           <h2 className="text-8xl font-black italic tracking-tighter mb-8">Hello.</h2>
-          <p className="text-gray-500 text-lg mb-10">Let's create something together.</p>
+          <p className="text-gray-500 text-lg mb-10">Let&apos;s create something together.</p>
           <a href={"mailto:" + data.email} className="inline-block px-10 py-5 bg-gray-900 text-white font-black text-lg hover:bg-orange-500 transition-colors">
             {data.email}
           </a>

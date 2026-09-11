@@ -55,7 +55,7 @@ function emailTemplate(name: string) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST() {
   // auth temporarily disabled for one-time send
 
   const supabase = createClient(
@@ -105,8 +105,8 @@ export async function POST(request: Request) {
       })
       sent.push(profile.email)
       await new Promise(r => setTimeout(r, 600))
-    } catch (err: any) {
-      failed.push(profile.email + ': ' + err.message)
+    } catch (err) {
+      failed.push(profile.email + ': ' + (err instanceof Error ? err.message : String(err)))
     }
   }
 

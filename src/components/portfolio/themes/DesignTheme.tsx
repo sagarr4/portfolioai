@@ -129,8 +129,8 @@ export default function DesignTheme({ data }: { data: ParsedResume }) {
       {/* CONTACT */}
       <section id="contact" className="py-24 bg-violet-600 text-white text-center">
         <div className="max-w-2xl mx-auto px-8">
-          <h2 className="text-6xl font-black mb-6 tracking-tight">Let's work<br/>together</h2>
-          <p className="text-violet-200 text-lg mb-10">Have a project in mind? I'd love to hear about it.</p>
+          <h2 className="text-6xl font-black mb-6 tracking-tight">Let&apos;s work<br/>together</h2>
+          <p className="text-violet-200 text-lg mb-10">Have a project in mind? I&apos;d love to hear about it.</p>
           <a href={"mailto:" + data.email} className="inline-block px-10 py-5 bg-white text-violet-600 font-black text-lg rounded-full hover:scale-105 transition-transform">
             {data.email}
           </a>

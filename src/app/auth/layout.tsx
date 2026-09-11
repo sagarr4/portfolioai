@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
@@ -18,7 +20,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       `}</style>
       <div style={{ width: '100%', maxWidth: 440 }}>
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <a href="/" style={{
+          <Link href="/" style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: 28,
             fontWeight: 700,
@@ -27,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             letterSpacing: '-.02em'
           }}>
             Portfolio<span style={{ color: '#c9a96e' }}>AI</span>
-          </a>
+          </Link>
           <div style={{
             width: 1,
             height: 48,

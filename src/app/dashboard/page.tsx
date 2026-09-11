@@ -1,6 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import ResumeUpload from '@/components/portfolio/ResumeUpload'
+
+interface PortfolioSummary {
+  id: string
+  field: string
+  title: string
+  is_published: boolean
+  views: number
+}
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -30,9 +39,9 @@ export default async function DashboardPage() {
 
       {/* NAV */}
       <nav style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
-        <a href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
+        <Link href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
           Portfolio<span style={{color:'#c9a96e'}}>AI</span>
-        </a>
+        </Link>
         <div style={{display:'flex',alignItems:'center',gap:20}}>
           <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300}}>{user.email}</span>
           <div style={{width:1,height:16,background:'rgba(245,240,232,.1)'}}/>
@@ -69,7 +78,7 @@ export default async function DashboardPage() {
               Your portfolios
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(340px,1fr))',gap:16}}>
-              {portfolios!.map((p: any) => (
+              {portfolios!.map((p: PortfolioSummary) => (
                 <a key={p.id} href={'/dashboard/portfolio/' + p.id} className="pcard">
                   <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:28}}>
                     <div>

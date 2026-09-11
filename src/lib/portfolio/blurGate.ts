@@ -172,8 +172,8 @@ export function applyBlurGate(html: string, portfolioId: string, hoursRemaining:
 <div id="pai-unlock-card">
   <div id="pai-unlock-badge">Preview</div>
   <h2>Unlock your full portfolio</h2>
-  <p>You've seen the hero. Publish for <strong>$4.99</strong> to unlock the full About, all projects, complete skills, contact details, and get a live shareable URL forever.</p>
-  <a id="pai-unlock-btn" href="${pricingUrl}">Publish for $4.99 →</a>
+  <p>You've seen the hero. Publish for <strong>$9.99</strong> to unlock the full About, all projects, complete skills, contact details, and get a live shareable URL forever.</p>
+  <a id="pai-unlock-btn" href="${pricingUrl}">Publish for $9.99 →</a>
   <div id="pai-unlock-meta">
     <span>One-time</span>
     <div class="dot"></div>

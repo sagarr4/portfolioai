@@ -2,6 +2,7 @@ export const runtime = 'nodejs'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import type Stripe from 'stripe'
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -10,7 +11,7 @@ export async function POST(request: Request) {
   let event
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!)
-  } catch (err) {
+  } catch {
     return new NextResponse('Webhook error', { status: 400 })
   }
 
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
   )
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as any
+    const session = event.data.object as Stripe.Checkout.Session
     const userId = session.metadata?.user_id
     const plan = session.metadata?.plan || 'pro'
     
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
   }
 
   if (event.type === 'customer.subscription.deleted') {
-    const sub = event.data.object as any
+    const sub = event.data.object as Stripe.Subscription
     await supabase.from('profiles')
       .update({ plan: 'free', stripe_subscription_id: null })
       .eq('stripe_subscription_id', sub.id)

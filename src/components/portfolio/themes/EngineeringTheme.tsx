@@ -21,7 +21,7 @@ export default function EngineeringTheme({ data }: { data: ParsedResume }) {
       {/* HERO */}
       <section id="about" className="min-h-screen flex items-center pt-20">
         <div className="max-w-5xl mx-auto px-6 py-20 w-full">
-          <div className="mb-4 text-[#3fb950] text-sm">// hello world</div>
+          <div className="mb-4 text-[#3fb950] text-sm">{'// hello world'}</div>
           <h1 className="text-6xl font-bold text-white mb-4">
             {data.name}
           </h1>
@@ -29,7 +29,7 @@ export default function EngineeringTheme({ data }: { data: ParsedResume }) {
             <span className="text-[#ff7b72]">const</span>{' '}
             <span className="text-[#79c0ff]">role</span>{' '}
             <span className="text-white">=</span>{' '}
-            <span className="text-[#a5d6ff]">"{data.title}"</span>
+            <span className="text-[#a5d6ff]">&quot;{data.title}&quot;</span>
           </div>
           <p className="text-[#8b949e] text-lg max-w-2xl leading-relaxed mb-10">{data.summary}</p>
           <div className="flex flex-wrap gap-3 mb-12">
@@ -49,7 +49,7 @@ export default function EngineeringTheme({ data }: { data: ParsedResume }) {
       {/* EXPERIENCE */}
       <section id="experience" className="py-24 border-t border-[#21262d]">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="text-[#3fb950] text-sm mb-2">// work history</div>
+          <div className="text-[#3fb950] text-sm mb-2">{'// work history'}</div>
           <h2 className="text-3xl font-bold text-white mb-12">Experience</h2>
           <div className="space-y-12">
             {data.experience.map((exp, i) => (
@@ -79,7 +79,7 @@ export default function EngineeringTheme({ data }: { data: ParsedResume }) {
       {data.projects && data.projects.length > 0 && (
         <section id="projects" className="py-24 border-t border-[#21262d]">
           <div className="max-w-5xl mx-auto px-6">
-            <div className="text-[#3fb950] text-sm mb-2">// things i built</div>
+            <div className="text-[#3fb950] text-sm mb-2">{'// things i built'}</div>
             <h2 className="text-3xl font-bold text-white mb-12">Projects</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {data.projects.map((proj, i) => (
@@ -105,7 +105,7 @@ export default function EngineeringTheme({ data }: { data: ParsedResume }) {
       {data.education && data.education.length > 0 && (
         <section className="py-24 border-t border-[#21262d]">
           <div className="max-w-5xl mx-auto px-6">
-            <div className="text-[#3fb950] text-sm mb-2">// background</div>
+            <div className="text-[#3fb950] text-sm mb-2">{'// background'}</div>
             <h2 className="text-3xl font-bold text-white mb-12">Education</h2>
             <div className="space-y-4">
               {data.education.map((edu, i) => (
@@ -125,7 +125,7 @@ export default function EngineeringTheme({ data }: { data: ParsedResume }) {
       {/* CONTACT */}
       <section id="contact" className="py-24 border-t border-[#21262d]">
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <div className="text-[#3fb950] text-sm mb-2">// get in touch</div>
+          <div className="text-[#3fb950] text-sm mb-2">{'// get in touch'}</div>
           <h2 className="text-3xl font-bold text-white mb-4">Contact</h2>
           <p className="text-[#8b949e] mb-8">Open to new opportunities and collaborations.</p>
           <a href={"mailto:" + data.email} className="inline-block px-8 py-4 bg-[#238636] hover:bg-[#2ea043] text-white font-semibold rounded-lg transition-colors">

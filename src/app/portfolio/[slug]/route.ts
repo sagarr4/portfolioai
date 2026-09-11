@@ -108,9 +108,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 <div id="pai-bottom-bar">
   <div style="display:flex;align-items:center;gap:12px;flex:1">
     <span id="pai-bar-badge">Your Preview</span>
-    <span id="pai-bar-msg">This is how it looks. <strong>Publish for $4.99</strong> to share with recruiters.</span>
+    <span id="pai-bar-msg">This is how it looks. <strong>Publish for $9.99</strong> to share with recruiters.</span>
   </div>
-  <a id="pai-bar-btn" href="${pricingUrl}">Publish for $4.99 →</a>
+  <a id="pai-bar-btn" href="${pricingUrl}">Publish for $9.99 →</a>
 </div>
 <!-- end watermark -->`
 
@@ -219,8 +219,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   <div class="container">
     <div class="badge">Preview Expired</div>
     <h1>This preview has expired</h1>
-    <p>The 72-hour preview window for this portfolio has ended. <span class="accent">Publish it for $4.99</span> to keep it live forever, share with recruiters, and remove all restrictions.</p>
-    <a class="btn" href="${expiredPricingUrl}">Publish for $4.99 →</a>
+    <p>The 72-hour preview window for this portfolio has ended. <span class="accent">Publish it for $9.99</span> to keep it live forever, share with recruiters, and remove all restrictions.</p>
+    <a class="btn" href="${expiredPricingUrl}">Publish for $9.99 →</a>
     <div class="divider"></div>
     <a class="footer-link" href="/">Build your own portfolio at PortfolioAI →</a>
   </div>

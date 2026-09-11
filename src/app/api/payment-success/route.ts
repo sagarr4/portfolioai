@@ -1,5 +1,5 @@
 export const runtime = 'nodejs'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { stripe } from '@/lib/stripe'
 import { NextResponse } from 'next/server'
 
@@ -33,13 +33,6 @@ export async function GET(request: Request) {
         html_content: await getHtmlWithoutWatermark(supabase, portfolioId)
       })
       .eq('id', portfolioId)
-
-    // Give bundle users 3 regen credits
-    if (type === 'bundle') {
-      await supabase.from('profiles')
-        .update({ regen_credits: 3 })
-        .eq('id', userId)
-    }
   }
 
   if (type === 'regen') {
@@ -64,7 +57,7 @@ export async function GET(request: Request) {
   return NextResponse.redirect(new URL('/dashboard/portfolio/' + portfolioId + '?success=' + type, request.url))
 }
 
-async function getHtmlWithoutWatermark(supabase: any, portfolioId: string) {
+async function getHtmlWithoutWatermark(supabase: SupabaseClient, portfolioId: string) {
   const { data } = await supabase
     .from('portfolios').select('html_content').eq('id', portfolioId).single()
   

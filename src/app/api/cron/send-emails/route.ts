@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
   const sent = { e24: 0, e3d: 0, e7d: 0, errors: [] as string[] }
 
-  async function sendEmail(user: any, template: (n: string, u: string) => any, column: string, counter: 'e24' | 'e3d' | 'e7d') {
+  async function sendEmail(user: { id: string; email: string | null; full_name: string | null }, template: (n: string, u: string) => { subject: string; html: string }, column: string, counter: 'e24' | 'e3d' | 'e7d') {
     if (!user.email) return
     if (user.email === 'sagarbmw1@gmail.com' || user.email === 'hello@portfolioai.company' || user.email === 'sagar@portfolioai.company') return
 
@@ -55,8 +55,8 @@ export async function GET(request: Request) {
         .eq('id', user.id)
       sent[counter]++
       await new Promise(r => setTimeout(r, 500))
-    } catch (err: any) {
-      sent.errors.push(counter + ' ' + user.email + ': ' + err.message)
+    } catch (err) {
+      sent.errors.push(counter + ' ' + user.email + ': ' + (err instanceof Error ? err.message : String(err)))
     }
   }
 

@@ -97,7 +97,7 @@ export default function LandingPage() {
         .trule{width:32px;height:1px;background:rgba(201,169,110,.3);margin-bottom:24px}
         .tname{font-size:16px;font-weight:700;letter-spacing:-.025em;color:#f5f0e8;margin-bottom:5px}
         .trole{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:rgba(245,240,232,.28);letter-spacing:.025em}
-        .pricegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .pricegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
         .PL{border-radius:4px;padding:56px;border:1px solid rgba(245,240,232,.08);background:#100e0a;position:relative;transition:all .4s}
         .PL:hover{transform:translateY(-5px);border-color:rgba(201,169,110,.18)}
         .PG{background:#c9a96e;border-color:#c9a96e}
@@ -150,7 +150,7 @@ export default function LandingPage() {
         borderBottom: nav > .6 ? '1px solid rgba(245,240,232,.06)' : '1px solid transparent',
         backdropFilter: nav > 0 ? `blur(${nav*24}px)` : 'none',
       }}>
-        <a href="/" className="logo">Portfolio<b>AI</b></a>
+        <Link href="/" className="logo">Portfolio<b>AI</b></Link>
         <div className="nav-mid">
           <a href="#how">Process</a>
           <a href="#industries">Industries</a>
@@ -274,7 +274,7 @@ export default function LandingPage() {
             {q:'Tried three other portfolio builders before this. PortfolioAI was the only one that read my resume properly and built something that actually looked professional without any tweaking on my end.',name:'Smit Shah',role:'Software Developer, Mumbai'},
           ].map((t,i) => (
             <div key={i} className={"TC r d"+(i+1)}>
-              <div className="tqbig">"</div>
+              <div className="tqbig">&quot;</div>
               <p className="TQ">{t.q}</p>
               <div className="trule"/>
               <div className="tname">{t.name}</div>
@@ -301,29 +301,16 @@ export default function LandingPage() {
             <Link href="/auth/signup" className="pabtn pb1">Start free</Link>
           </div>
           <div className="PL PG">
-            <div className="ptag">Best value</div>
-            <div className="ptier">Bundle</div>
+            <div className="ptier">Whole Website</div>
             <div className="ppr">$9.99</div>
-            <div className="pmo">one-time, save 30%</div>
+            <div className="pmo">one-time · yours forever</div>
             <div className="prule"/>
             <ul className="plist">
-              {['Launch portfolio live','3 design regenerations','Public URL forever','No monthly fees','Share with recruiters'].map((f,i) => (
+              {['Live public URL forever','Share with recruiters','No branding','No monthly fees ever'].map((f,i) => (
                 <li key={i}><span className="pck">+</span>{f}</li>
               ))}
             </ul>
-            <Link href="/pricing" className="pabtn pb2">Get Bundle, $9.99</Link>
-          </div>
-          <div className="PL">
-            <div className="ptier">Launch</div>
-            <div className="ppr">$4.99</div>
-            <div className="pmo">one-time · less than a coffee</div>
-            <div className="prule"/>
-            <ul className="plist">
-              {['Live public URL forever','Share with recruiters','No branding','One payment only'].map((f,i) => (
-                <li key={i}><span className="pck">+</span>{f}</li>
-              ))}
-            </ul>
-            <Link href="/pricing" className="pabtn pb3">Launch, $4.99</Link>
+            <Link href="/pricing" className="pabtn pb2">Get started, $9.99</Link>
           </div>
         </div>
       </section>
@@ -341,7 +328,7 @@ export default function LandingPage() {
       </div>
 
       <footer className="FOOT">
-        <a href="/" className="flogo">Portfolio<b>AI</b></a>
+        <Link href="/" className="flogo">Portfolio<b>AI</b></Link>
         <div className="flinks">
           <a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/contact">Contact</a>
         </div>

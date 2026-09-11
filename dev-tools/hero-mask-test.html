@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: sans-serif; }
+
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 55% 45%;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #fbeaea;
+  }
+
+  /* Layer 0: decorative dots, spans the WHOLE hero, sits at the bottom */
+  .dots {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: radial-gradient(#c0392b 1.5px, transparent 1.5px);
+    background-size: 34px 34px;
+    opacity: 0.35;
+  }
+
+  /* Layer 2: text column, above everything */
+  .text-col {
+    position: relative;
+    z-index: 2;
+    padding: 80px 60px;
+  }
+  .text-col h1 { font-size: 64px; }
+
+  /* Layer 1: photo, ABOVE dots but BELOW text -- flush to top/right/bottom,
+     zero border-radius/border/shadow, mask fades its LEFT edge only so the
+     dots layer underneath shows through there and nowhere else on the photo */
+  .photo-col {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 45%;
+    z-index: 1;
+  }
+  .photo-col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%);
+    mask-image: linear-gradient(to right, transparent 0%, black 18%);
+  }
+</style>
+</head>
+<body>
+  <div class="hero">
+    <div class="dots"></div>
+    <div class="text-col">
+      <h1>SAGAR<br><span style="color:#c0392b;font-style:italic;">Prajapati</span></h1>
+      <p>Zero dots should appear on the suit, face, or shirt. No stray boxes anywhere.</p>
+    </div>
+    <div class="photo-col">
+      <img src="https://frkypmossbfwthfceysb.supabase.co/storage/v1/object/public/portfolio-photos/28afaaa5-3618-4f90-a07a-f96fe700e272/293d6642-21c1-4b96-a729-4ff096e2bde8/enhanced.jpg" alt="">
+    </div>
+  </div>
+</body>
+</html>

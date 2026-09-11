@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function PricingPage() {
@@ -77,19 +78,19 @@ export default function PricingPage() {
       `}</style>
 
       <nav style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
-        <a href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
+        <Link href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
           Portfolio<span style={{color:'#c9a96e'}}>AI</span>
-        </a>
+        </Link>
         <a href="/dashboard" style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.4)',textDecoration:'none'}}>Back to dashboard</a>
       </nav>
 
       <div style={{maxWidth:1000,margin:'0 auto',padding:'100px 72px'}}>
 
         {/* CONTEXT BANNER */}
-        {reason && (
+        {reason === 'second_portfolio' && (
           <div style={{background:'rgba(201,169,110,.08)',border:'1px solid rgba(201,169,110,.2)',borderRadius:4,padding:'16px 24px',marginBottom:40,textAlign:'center'}}>
             <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'#c9a96e',fontWeight:500}}>
-              {reason === 'second_portfolio' ? '✦ Launch your first portfolio to unlock more generations' : '✦ Get a fresh new design for just $3.99'}
+              ✦ Launch your first portfolio to unlock more generations
             </p>
           </div>
         )}
@@ -110,7 +111,7 @@ export default function PricingPage() {
         </div>
 
         {/* CARDS */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20,marginBottom:60}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:20,marginBottom:60}}>
 
           {/* FREE */}
           <div className="card">
@@ -127,72 +128,23 @@ export default function PricingPage() {
             <a href="/dashboard" className="btn btn-outline">Start free</a>
           </div>
 
-          {/* BUNDLE - FEATURED */}
+          {/* WHOLE WEBSITE */}
           <div className="card card-featured">
-            <div className="badge">Best value, save 30%</div>
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(201,169,110,.6)',marginBottom:16}}>Launch Bundle</div>
+            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(201,169,110,.6)',marginBottom:16}}>Whole Website</div>
             <div className="price" style={{color:'#c9a96e'}}>$9.99</div>
             <div className="price-note">one-time payment · yours forever</div>
             <div className="divider"/>
             {[
-              'Everything in Launch',
-              'Live public URL, share instantly',
-              '3 design regenerations included',
-              'Perfect for active job seekers',
-              'Less than 2 coffees',
-            ].map((f,i) => <div key={i} className="feature"><span className="check">+</span>{f}</div>)}
-            <div style={{marginTop:8}}>
-              <div className="saving">You save $4.96 vs buying separately</div>
-            </div>
-            <button onClick={() => handlePurchase('bundle')} disabled={loading === 'bundle'} className="btn btn-gold">
-              {loading === 'bundle' ? 'Loading...' : 'Get Launch Bundle, $9.99'}
-            </button>
-          </div>
-
-          {/* LAUNCH */}
-          <div className="card">
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:20}}>Launch</div>
-            <div className="price">$4.99</div>
-            <div className="price-note">one-time · less than a coffee</div>
-            <div className="divider"/>
-            {[
               'Live public URL forever',
               'Share with recruiters',
-              'Remove PortfolioAI watermark',
+              'No PortfolioAI watermark',
               'No monthly fees ever',
             ].map((f,i) => <div key={i} className="feature"><span className="check">+</span>{f}</div>)}
-            <button onClick={() => handlePurchase('launch')} disabled={loading === 'launch'} className="btn btn-gold">
-              {loading === 'launch' ? 'Loading...' : 'Launch my portfolio, $4.99'}
+            <button onClick={() => handlePurchase('bundle')} disabled={loading === 'bundle'} className="btn btn-gold">
+              {loading === 'bundle' ? 'Loading...' : 'Get Whole Website, $9.99'}
             </button>
           </div>
 
-        </div>
-
-        {/* REGEN ADD-ON */}
-        <div style={{background:'#100e0a',border:'1px solid rgba(245,240,232,.07)',borderRadius:4,padding:'36px 48px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:32,flexWrap:'wrap'}}>
-          <div>
-            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.28)',marginBottom:8}}>Add-on</div>
-            <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:24,fontWeight:700,color:'#f5f0e8',letterSpacing:'-.03em',marginBottom:8}}>New Design, $3.99</h3>
-            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:'rgba(245,240,232,.4)',fontWeight:300,maxWidth:480}}>
-              Not feeling your current design? Get a completely new AI-generated portfolio. Different layout, different style, same content. Pay only when you want a change.
-            </p>
-          </div>
-          <button onClick={() => handlePurchase('regen')} disabled={loading === 'regen'} style={{
-            padding:'14px 32px',
-            background:'transparent',
-            color:'#c9a96e',
-            border:'1px solid rgba(201,169,110,.3)',
-            borderRadius:3,
-            fontFamily:"'DM Sans',sans-serif",
-            fontSize:14,
-            fontWeight:600,
-            cursor:'pointer',
-            transition:'all .25s',
-            whiteSpace:'nowrap',
-            flexShrink:0,
-          }}>
-            {loading === 'regen' ? 'Loading...' : 'Get new design, $3.99'}
-          </button>
         </div>
 
         {/* TRUST */}
