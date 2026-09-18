@@ -13,11 +13,13 @@ const nextConfig: NextConfig = {
       './node_modules/sharp/**/*',
       './node_modules/@img/**/*',
       './node_modules/onnxruntime-node/**/*',
+      './node_modules/@imgly/**/*',
     ],
     '/api/parse-resume': [
       './node_modules/sharp/**/*',
       './node_modules/@img/**/*',
       './node_modules/onnxruntime-node/**/*',
+      './node_modules/@imgly/**/*',
     ],
   },
 };
