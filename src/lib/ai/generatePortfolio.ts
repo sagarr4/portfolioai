@@ -413,6 +413,28 @@ window.addEventListener('load', function() {
       el.classList.add('in');
     });
   }, 2000);
+  // Position-based reveal (no IntersectionObserver). Chromium never fires
+  // an observer for an element whose OWN clip-path fully clips it (the
+  // common clip-path wipe-in headline), so those headings stayed invisible
+  // forever and left big empty gaps between sections. Scroll position does
+  // not care about clipping, so this reveals them as they near the viewport.
+  var REVEAL_SEL = '[class*="reveal"],[class*="wipe"],[class*="word"],[class*="draw"],[class*="split"],[class*="stagger"]';
+  var sweepQueued = false;
+  function sweep() {
+    sweepQueued = false;
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    document.querySelectorAll(REVEAL_SEL).forEach(function(el) {
+      if (el.classList.contains('in')) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < vh + 200 && r.bottom > -200) el.classList.add('in');
+    });
+  }
+  function queueSweep() {
+    if (!sweepQueued) { sweepQueued = true; requestAnimationFrame(sweep); }
+  }
+  window.addEventListener('scroll', queueSweep, { passive: true });
+  window.addEventListener('resize', queueSweep);
+  setTimeout(sweep, 1200);
 });
 </script>
 `
