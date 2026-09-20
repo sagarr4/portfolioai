@@ -55,3 +55,76 @@ button {
   border: none;
   color: inherit;
 }
+
+/* =========================================================
+   Responsive layer (dashboard, portfolio editor, pricing,
+   auth, contact/legal). Pages use inline styles, so these
+   overrides use !important on purpose.
+   ========================================================= */
+.pai-page-head > *, .pai-pricing-grid > *, .pai-trust-grid > * { min-width: 0; }
+
+@media (max-width: 900px) {
+  .pai-nav { padding: 0 24px !important; }
+  .pai-container { padding: 56px 24px !important; }
+  .pai-page-head { grid-template-columns: 1fr !important; gap: 24px !important; align-items: start !important; margin-bottom: 56px !important; padding-bottom: 44px !important; }
+  .pai-pricing-grid { grid-template-columns: 1fr !important; }
+  .pai-page { padding: 100px 32px 64px !important; }
+}
+
+@media (max-width: 640px) {
+  input, textarea, select { font-size: 16px !important; }
+
+  .pai-nav { padding: 0 16px !important; height: 60px !important; }
+  .pai-nav-email, .pai-nav-divider { display: none !important; }
+  .pai-nav-detail {
+    position: static !important;
+    height: auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 14px 16px !important;
+  }
+  .pai-nav-actions-wrap { width: 100%; gap: 8px !important; }
+  .pai-nav-actions-wrap .btn {
+    flex: 1 1 calc(50% - 8px) !important;
+    justify-content: center !important;
+    min-height: 44px;
+    padding: 11px 12px !important;
+    font-size: 12.5px !important;
+  }
+  .pai-nav-actions-wrap .pai-btn-wide { flex: 1 1 100% !important; }
+
+  .pai-container { padding: 36px 20px 64px !important; }
+  .pai-page-head { margin-bottom: 40px !important; padding-bottom: 32px !important; gap: 20px !important; }
+  .pai-h1 {
+    font-size: clamp(34px, 10.5vw, 44px) !important;
+    overflow-wrap: anywhere;
+    letter-spacing: -.035em !important;
+  }
+  .pai-hero-block { margin-bottom: 36px !important; padding-bottom: 36px !important; }
+
+  .pcard { padding: 24px 20px !important; }
+  .pai-drop { padding: 40px 20px !important; }
+
+  .info-card { padding: 22px 18px !important; }
+  .pai-status { padding: 16px 18px !important; margin-bottom: 24px !important; }
+  .pai-stats { grid-template-columns: repeat(2, 1fr) !important; }
+  .pai-stats .stat { padding: 18px 16px !important; border-right: none !important; min-width: 0; overflow-wrap: anywhere; }
+  .pai-exp-head { flex-direction: column !important; gap: 4px !important; }
+  .pai-exp-head > div { white-space: normal !important; padding-top: 0 !important; }
+  .pai-url-row { flex-direction: column !important; align-items: stretch !important; }
+  .pai-url-row code { flex: none !important; width: 100%; font-size: 12px !important; padding: 12px 14px !important; }
+  .pai-url-row .btn { width: 100%; justify-content: center; min-height: 44px; }
+
+  .pai-pricing-head { margin-bottom: 44px !important; }
+  .card { padding: 28px 22px !important; }
+  .price { font-size: 56px !important; }
+  .pai-trust-grid { grid-template-columns: 1fr !important; gap: 4px !important; }
+
+  .pai-auth-card { padding: 32px 22px !important; }
+
+  .pai-page { padding: 88px 20px 56px !important; }
+  .pai-page-h1 { font-size: 34px !important; }
+  .pai-page-logo { margin-bottom: 40px !important; }
+  .pai-page button[type="submit"] { width: 100%; align-self: stretch !important; }
+}

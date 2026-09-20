@@ -38,28 +38,28 @@ export default async function DashboardPage() {
       `}</style>
 
       {/* NAV */}
-      <nav style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
+      <nav className="pai-nav" style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
         <Link href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
           Portfolio<span style={{color:'#c9a96e'}}>AI</span>
         </Link>
         <div style={{display:'flex',alignItems:'center',gap:20}}>
-          <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300}}>{user.email}</span>
-          <div style={{width:1,height:16,background:'rgba(245,240,232,.1)'}}/>
+          <span className="pai-nav-email" style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.3)',fontWeight:300}}>{user.email}</span>
+          <div className="pai-nav-divider" style={{width:1,height:16,background:'rgba(245,240,232,.1)'}}/>
           <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:600,letterSpacing:'.1em',textTransform:'uppercase',color:'#c9a96e',background:'rgba(201,169,110,.1)',padding:'5px 12px',borderRadius:2,border:'1px solid rgba(201,169,110,.15)'}}>Free plan</span>
           <a href="/api/auth/logout" style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:'rgba(245,240,232,.3)',textDecoration:'none',marginLeft:8}}>Sign out</a>
         </div>
       </nav>
 
-      <div style={{maxWidth:1200,margin:'0 auto',padding:'80px 72px'}}>
+      <div className="pai-container" style={{maxWidth:1200,margin:'0 auto',padding:'80px 72px'}}>
 
         {/* PAGE HEADER */}
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:80,alignItems:'end',marginBottom:80,paddingBottom:64,borderBottom:'1px solid rgba(245,240,232,.06)'}}>
+        <div className="pai-page-head" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:80,alignItems:'end',marginBottom:80,paddingBottom:64,borderBottom:'1px solid rgba(245,240,232,.06)'}}>
           <div>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.18em',textTransform:'uppercase',color:'#c9a96e',marginBottom:20,display:'flex',alignItems:'center',gap:12}}>
               <span style={{width:32,height:1,background:'rgba(201,169,110,.4)',display:'block'}}/>
               Dashboard
             </div>
-            <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:52,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1,marginBottom:0}}>
+            <h1 className="pai-h1" style={{fontFamily:"'Playfair Display',serif",fontSize:52,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1,marginBottom:0}}>
               {count > 0 ? <>Your <em style={{fontStyle:'italic',color:'#c9a96e'}}>portfolios.</em></> : <>Ready <em style={{fontStyle:'italic',color:'#c9a96e'}}>when you are.</em></>}
             </h1>
           </div>
@@ -77,13 +77,13 @@ export default async function DashboardPage() {
               <span style={{width:32,height:1,background:'rgba(245,240,232,.15)',display:'block'}}/>
               Your portfolios
             </div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(340px,1fr))',gap:16}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,340px),1fr))',gap:16}}>
               {portfolios!.map((p: PortfolioSummary) => (
                 <a key={p.id} href={'/dashboard/portfolio/' + p.id} className="pcard">
-                  <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:28}}>
-                    <div>
+                  <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:28,gap:12}}>
+                    <div style={{minWidth:0}}>
                       <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.12em',textTransform:'uppercase',color:'rgba(201,169,110,.5)',marginBottom:10}}>{p.field}</div>
-                      <div style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,letterSpacing:'-.03em',color:'#f5f0e8',lineHeight:1.1}}>{p.title}</div>
+                      <div style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,letterSpacing:'-.03em',color:'#f5f0e8',lineHeight:1.1,overflowWrap:'anywhere'}}>{p.title}</div>
                     </div>
                     <div style={{width:8,height:8,borderRadius:'50%',background:p.is_published ? '#4ade80' : 'rgba(245,240,232,.2)',marginTop:6,flexShrink:0,boxShadow:p.is_published ? '0 0 8px rgba(74,222,128,.4)' : 'none'}}/>
                   </div>

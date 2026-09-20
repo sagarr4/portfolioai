@@ -131,13 +131,16 @@ export default function ResumeUpload() {
             alignItems: 'center',
             gap: 10,
             padding: '8px 16px',
+            maxWidth: '100%',
             border: '1px solid ' + (photoFile ? 'rgba(201,169,110,.3)' : 'rgba(245,240,232,.1)'),
             borderRadius: 3,
           }}>
             {photoPreview && (
               <img src={photoPreview} alt="" style={{ width: 22, height: 22, borderRadius: 4, objectFit: 'cover' }} />
             )}
-            {photoFile ? 'Photo added: ' + photoFile.name : '+ Add a professional photo (optional)'}
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
+              {photoFile ? 'Photo added: ' + photoFile.name : '+ Add a professional photo (optional)'}
+            </span>
             <input
               type="file"
               accept="image/*"
@@ -150,6 +153,7 @@ export default function ResumeUpload() {
 
       <div
         {...getRootProps()}
+        className="pai-drop"
         style={{
           border: '1px solid ' + (isDragActive ? 'rgba(201,169,110,.6)' : isDone ? 'rgba(74,222,128,.4)' : isProcessing ? 'rgba(201,169,110,.25)' : 'rgba(245,240,232,.08)'),
           borderRadius: 4,

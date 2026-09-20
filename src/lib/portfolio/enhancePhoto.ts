@@ -82,7 +82,10 @@ async function standardizeDimensions(imageBuffer: Buffer, extension: 'jpg' | 'pn
 }
 
 async function generativeRetouch(imageBuffer: Buffer, mimeType: string, hueFamily: string): Promise<Buffer | null> {
-  if (!process.env.OPENAI_API_KEY) return null
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('Generative retouch skipped: OPENAI_API_KEY not set in this environment')
+    return null
+  }
   try {
     const formData = new FormData()
     const blob = new Blob([Uint8Array.from(imageBuffer)], { type: mimeType })

@@ -86,7 +86,7 @@ export default function PhotoUpload({
         <p style={{ color: '#e07856', fontSize: 13, marginBottom: 16 }}>{error}</p>
       )}
 
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
         <label style={{
           background: '#c9a96e',
           color: '#0c0a08',

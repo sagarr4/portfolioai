@@ -77,14 +77,14 @@ export default function PricingPage() {
         .saving{font-family:'DM Sans',sans-serif;font-size:12px;color:#4ade80;font-weight:500;letter-spacing:.04em}
       `}</style>
 
-      <nav style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
+      <nav className="pai-nav" style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
         <Link href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
           Portfolio<span style={{color:'#c9a96e'}}>AI</span>
         </Link>
         <a href="/dashboard" style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:'rgba(245,240,232,.4)',textDecoration:'none'}}>Back to dashboard</a>
       </nav>
 
-      <div style={{maxWidth:1000,margin:'0 auto',padding:'100px 72px'}}>
+      <div className="pai-container" style={{maxWidth:1000,margin:'0 auto',padding:'100px 72px'}}>
 
         {/* CONTEXT BANNER */}
         {reason === 'second_portfolio' && (
@@ -96,13 +96,13 @@ export default function PricingPage() {
         )}
 
         {/* HEADER */}
-        <div style={{textAlign:'center',marginBottom:80}}>
+        <div className="pai-pricing-head" style={{textAlign:'center',marginBottom:80}}>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.18em',textTransform:'uppercase',color:'#c9a96e',marginBottom:20,display:'flex',alignItems:'center',justifyContent:'center',gap:12}}>
             <span style={{width:32,height:1,background:'rgba(201,169,110,.4)',display:'block'}}/>
             Simple pricing
             <span style={{width:32,height:1,background:'rgba(201,169,110,.4)',display:'block'}}/>
           </div>
-          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1,marginBottom:16}}>
+          <h1 className="pai-h1" style={{fontFamily:"'Playfair Display',serif",fontSize:64,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1,marginBottom:16}}>
             Try free.<br/><em style={{fontStyle:'italic',color:'#c9a96e'}}>Pay when you love it.</em>
           </h1>
           <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:17,color:'rgba(245,240,232,.4)',fontWeight:300,maxWidth:480,margin:'0 auto'}}>
@@ -111,7 +111,7 @@ export default function PricingPage() {
         </div>
 
         {/* CARDS */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:20,marginBottom:60}}>
+        <div className="pai-pricing-grid" style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:20,marginBottom:60}}>
 
           {/* FREE */}
           <div className="card">
@@ -148,7 +148,7 @@ export default function PricingPage() {
         </div>
 
         {/* TRUST */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:24,marginTop:48}}>
+        <div className="pai-trust-grid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:24,marginTop:48}}>
           {[
             {icon:'🔒',title:'Secure payment',desc:'Powered by Stripe. Your card details are never stored.'},
             {icon:'♾️',title:'Yours forever',desc:'One payment. Your portfolio stays live permanently.'},

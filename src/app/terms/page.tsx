@@ -2,11 +2,11 @@ import Link from 'next/link'
 
 export default function TermsPage() {
   return (
-    <div style={{minHeight:'100vh',background:'#0c0a08',color:'#f5f0e8',fontFamily:"'DM Sans',sans-serif",padding:'120px 72px 80px'}}>
+    <div className="pai-page" style={{minHeight:'100vh',background:'#0c0a08',color:'#f5f0e8',fontFamily:"'DM Sans',sans-serif",padding:'120px 72px 80px'}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{-webkit-font-smoothing:antialiased}`}</style>
       <div style={{maxWidth:720,margin:'0 auto'}}>
-        <Link href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em',display:'block',marginBottom:64}}>Portfolio<span style={{color:'#c9a96e'}}>AI</span></Link>
-        <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:48,fontWeight:700,letterSpacing:'-.04em',marginBottom:12,lineHeight:1}}>Terms of <em style={{fontStyle:'italic',color:'#c9a96e'}}>Service</em></h1>
+        <Link href="/" className="pai-page-logo" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em',display:'block',marginBottom:64}}>Portfolio<span style={{color:'#c9a96e'}}>AI</span></Link>
+        <h1 className="pai-page-h1" style={{fontFamily:"'Playfair Display',serif",fontSize:48,fontWeight:700,letterSpacing:'-.04em',marginBottom:12,lineHeight:1}}>Terms of <em style={{fontStyle:'italic',color:'#c9a96e'}}>Service</em></h1>
         <p style={{fontSize:13,color:'rgba(245,240,232,.3)',marginBottom:48}}>Last updated: May 2026</p>
         {[
           {h:'Acceptance',p:'By using PortfolioAI you agree to these terms. If you do not agree, please do not use the service.'},

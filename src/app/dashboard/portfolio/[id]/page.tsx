@@ -83,36 +83,36 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
       `}</style>
 
       {/* NAV */}
-      <nav style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
+      <nav className="pai-nav pai-nav-detail" style={{position:'sticky',top:0,zIndex:100,height:72,padding:'0 72px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'rgba(12,10,8,.96)',borderBottom:'1px solid rgba(245,240,232,.06)',backdropFilter:'blur(20px)'}}>
         <a href="/" style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:700,color:'#f5f0e8',textDecoration:'none',letterSpacing:'-.02em'}}>
           Portfolio<span style={{color:'#c9a96e'}}>AI</span>
         </a>
-        <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+        <div className="pai-nav-actions-wrap" style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
           <a href="/dashboard" className="btn btn-outline">← Dashboard</a>
           {portfolio.is_published && (
             <a href={liveUrl} target="_blank" className="btn btn-outline">View live ↗</a>
           )}
           {!portfolio.is_published ? (
-            <button onClick={handlePublish} disabled={publishing} className="btn btn-gold">
+            <button onClick={handlePublish} disabled={publishing} className="btn btn-gold pai-btn-wide">
               {publishing ? 'Publishing...' : '↑ Publish portfolio'}
             </button>
           ) : (
-            <button onClick={handlePublish} disabled={publishing} className="btn btn-green">
+            <button onClick={handlePublish} disabled={publishing} className="btn btn-green pai-btn-wide">
               {publishing ? 'Updating...' : '✓ Published, Republish'}
             </button>
           )}
         </div>
       </nav>
 
-      <div style={{maxWidth:1000,margin:'0 auto',padding:'80px 72px'}}>
+      <div className="pai-container" style={{maxWidth:1000,margin:'0 auto',padding:'80px 72px'}}>
 
         {/* HERO */}
-        <div style={{marginBottom:64,paddingBottom:64,borderBottom:'1px solid rgba(245,240,232,.06)'}}>
+        <div className="pai-hero-block" style={{marginBottom:64,paddingBottom:64,borderBottom:'1px solid rgba(245,240,232,.06)'}}>
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.18em',textTransform:'uppercase',color:'#c9a96e',marginBottom:20,display:'flex',alignItems:'center',gap:12}}>
             <span style={{width:32,height:1,background:'rgba(201,169,110,.4)',display:'block'}}/>
             {portfolio.field} · {portfolio.theme}
           </div>
-          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:52,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1.0,marginBottom:12}}>{parsed?.name}</h1>
+          <h1 className="pai-h1" style={{fontFamily:"'Playfair Display',serif",fontSize:52,fontWeight:700,letterSpacing:'-.04em',color:'#f5f0e8',lineHeight:1.0,marginBottom:12}}>{parsed?.name}</h1>
           <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:18,color:'#c9a96e',fontWeight:400,marginBottom:16,letterSpacing:'-.01em'}}>{parsed?.title}</p>
           <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,color:'rgba(245,240,232,.38)',fontWeight:300,maxWidth:620,lineHeight:1.75}}>{parsed?.summary}</p>
         </div>
@@ -137,7 +137,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* STATUS */}
-        <div style={{background: portfolio.is_published ? 'rgba(74,222,128,.06)' : 'rgba(201,169,110,.06)',border:'1px solid ' + (portfolio.is_published ? 'rgba(74,222,128,.15)' : 'rgba(201,169,110,.15)'),borderRadius:4,padding:'20px 28px',marginBottom:32,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:16}}>
+        <div className="pai-status" style={{background: portfolio.is_published ? 'rgba(74,222,128,.06)' : 'rgba(201,169,110,.06)',border:'1px solid ' + (portfolio.is_published ? 'rgba(74,222,128,.15)' : 'rgba(201,169,110,.15)'),borderRadius:4,padding:'20px 28px',marginBottom:32,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:16}}>
           <div style={{display:'flex',alignItems:'center',gap:12}}>
             <div style={{width:8,height:8,borderRadius:'50%',background:portfolio.is_published ? '#4ade80' : '#c9a96e',boxShadow:'0 0 8px ' + (portfolio.is_published ? 'rgba(74,222,128,.5)' : 'rgba(201,169,110,.5)')}}/>
             <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,fontWeight:600,color:portfolio.is_published ? '#4ade80' : '#c9a96e'}}>
@@ -155,7 +155,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* STATS ROW */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',background:'rgba(245,240,232,.06)',gap:1,marginBottom:24,borderRadius:4,overflow:'hidden'}}>
+        <div className="pai-stats" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',background:'rgba(245,240,232,.06)',gap:1,marginBottom:24,borderRadius:4,overflow:'hidden'}}>
           {[
             {label:'Profession',value:portfolio.field},
             {label:'Design theme',value:portfolio.theme},
@@ -184,7 +184,7 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:10,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.25)',marginBottom:24}}>Experience</div>
           {parsed?.experience?.map((exp: ParsedResume['experience'][number], i: number) => (
             <div key={i} style={{marginBottom:28,paddingBottom:28,borderBottom:i < parsed.experience.length-1 ? '1px solid rgba(245,240,232,.05)' : 'none'}}>
-              <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:6,gap:16}}>
+              <div className="pai-exp-head" style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:6,gap:16}}>
                 <div style={{fontFamily:"'Playfair Display',serif",fontSize:17,fontWeight:700,color:'#f5f0e8',letterSpacing:'-.02em'}}>{exp.role}</div>
                 <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:'rgba(245,240,232,.25)',whiteSpace:'nowrap',paddingTop:3,fontWeight:300}}>{exp.duration}</div>
               </div>
@@ -224,8 +224,8 @@ export default function PortfolioEditPage({ params }: { params: Promise<{ id: st
         {/* PORTFOLIO URL */}
         <div className="info-card">
           <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:10,fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,240,232,.25)',marginBottom:16}}>Portfolio URL</div>
-          <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
-            <code style={{flex:1,fontFamily:'monospace',fontSize:14,color:'#c9a96e',background:'rgba(201,169,110,.05)',border:'1px solid rgba(201,169,110,.12)',borderRadius:3,padding:'14px 18px',wordBreak:'break-all',minWidth:0}}>{liveUrl}</code>
+          <div className="pai-url-row" style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+            <code style={{flex:'1 1 240px',fontFamily:'monospace',fontSize:14,color:'#c9a96e',background:'rgba(201,169,110,.05)',border:'1px solid rgba(201,169,110,.12)',borderRadius:3,padding:'14px 18px',wordBreak:'break-all',minWidth:0}}>{liveUrl}</code>
             <button onClick={copyUrl} className="btn btn-outline" style={{flexShrink:0}}>
               {copied ? '✓ Copied' : 'Copy URL'}
             </button>

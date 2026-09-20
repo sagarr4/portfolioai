@@ -37,7 +37,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             margin: '20px auto 0'
           }} />
         </div>
-        <div style={{
+        <div className="pai-auth-card" style={{
           background: '#100e0a',
           border: '1px solid rgba(245,240,232,.07)',
           borderRadius: 4,

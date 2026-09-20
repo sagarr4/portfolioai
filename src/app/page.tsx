@@ -134,7 +134,7 @@ export default function LandingPage() {
         @media(max-width:960px){
           .NAV{padding:0 24px}.nav-mid{display:none}
           .HERO{padding:100px 24px 60px}
-          .SEC,.SEC2{padding:100px 24px}
+          .SEC{padding:100px 24px}.SEC2{padding:0 24px 100px}
           .DARK .SEC{padding:100px 24px}
           .grid2{grid-template-columns:1fr;gap:48px}
           .sgrid,.pgrid{grid-template-columns:1fr}
@@ -142,6 +142,30 @@ export default function LandingPage() {
           .FINAL{margin:0 24px 100px;padding:80px 32px}
           .FOOT{padding:40px 24px;flex-direction:column;gap:24px;text-align:center}
           .flinks{flex-wrap:wrap;justify-content:center}
+        }
+        @media(max-width:600px){
+          .NAV{padding:0 16px;height:64px}
+          .nav-cta{padding:10px 18px;font-size:12.5px}
+          .HERO{padding:96px 20px 56px}
+          .kicker{font-size:10px;letter-spacing:.14em;margin-bottom:28px;gap:10px}
+          .kline{width:24px}
+          .H1{font-size:clamp(38px,12.5vw,56px);line-height:.95;overflow-wrap:break-word}
+          .vline{height:44px;margin:28px auto}
+          .hsub{margin-bottom:36px}
+          .hbtns{flex-direction:column;align-items:stretch;width:100%;margin-bottom:44px}
+          .bgold,.bghost{text-align:center;padding:16px 20px;width:100%}
+          .SEC{padding:72px 20px}.SEC2{padding:0 20px 72px}.DARK .SEC{padding:72px 20px}
+          .grid2{gap:40px}
+          .BT{font-size:16px}
+          .ST{padding:36px 24px}.sn{font-size:56px;margin-bottom:20px}.sh{font-size:24px}
+          .PI{padding:28px 22px}
+          .TC{padding:32px 24px}.tqbig{font-size:64px}.TQ{font-size:16px;margin-bottom:28px}
+          .PL{padding:32px 24px}.ppr{font-size:52px}.pmo{margin-bottom:32px}.ptag{margin-bottom:28px}
+          .FINAL{margin:0 16px 72px;padding:64px 22px}
+          .FH{font-size:clamp(34px,10.5vw,48px) !important}
+          .titem{padding:0 28px;gap:28px}
+          .FOOT{padding:32px 20px}
+          .flinks{gap:20px}
         }
       `}</style>
 
@@ -318,7 +342,7 @@ export default function LandingPage() {
       <div className="FINAL r">
         <div className="fglow"/>
         <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,fontWeight:500,letterSpacing:'.18em',textTransform:'uppercase',color:'#c9a96e',marginBottom:28,position:'relative',zIndex:1}}>One upload away</div>
-        <h2 style={{fontSize:'clamp(48px,6.5vw,88px)',fontWeight:800,lineHeight:.9,letterSpacing:'-.055em',color:'#f5f0e8',marginBottom:28,position:'relative',zIndex:1}}>
+        <h2 className="FH" style={{fontSize:'clamp(48px,6.5vw,88px)',fontWeight:800,lineHeight:.9,letterSpacing:'-.055em',color:'#f5f0e8',marginBottom:28,position:'relative',zIndex:1}}>
           Your career deserves<br/>a <em style={{fontStyle:'italic',color:'#c9a96e'}}>beautiful</em> home.
         </h2>
         <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:18,fontWeight:300,color:'rgba(245,240,232,.38)',marginBottom:56,position:'relative',zIndex:1}}>No design skills. No technical knowledge. No templates. Just your resume.</p>
