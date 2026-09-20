@@ -3,98 +3,33 @@ export const maxDuration = 60
 
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
-import { email24h, email3d, email7d } from '@/lib/email/templates'
 import { NextResponse } from 'next/server'
+import { runDrip } from '@/lib/email/dripRunner'
+import { renderDrip, dripHeaders, DRIP_LENGTH, FROM, REPLY_TO } from '@/lib/email/drip'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
+// Runs daily (vercel.json). Each user gets the next email of the DRIP sequence about
+// every 2 days until they pay, unsubscribe, or finish the sequence. New signups are
+// enrolled automatically (profiles.drip_step starts at 0).
+//
+//   ?dry=1                        list who WOULD be emailed, send nothing
+//   ?test=you@x.com&step=3        send sample email #3 to that address only (&portfolio=0 for the no-portfolio version)
 export async function GET(request: Request) {
-  const authHeader = request.headers.get('authorization')
-  if (authHeader !== 'Bearer ' + process.env.CRON_SECRET) {
+  if (request.headers.get('authorization') !== 'Bearer ' + process.env.CRON_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+  const url = new URL(request.url)
+  const resend = new Resend(process.env.RESEND_API_KEY)
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-
-  const now = new Date()
-  const h24 = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString()
-  const h72 = new Date(now.getTime() - 72 * 60 * 60 * 1000).toISOString()
-  const h168 = new Date(now.getTime() - 168 * 60 * 60 * 1000).toISOString()
-
-  const sent = { e24: 0, e3d: 0, e7d: 0, errors: [] as string[] }
-
-  async function sendEmail(user: { id: string; email: string | null; full_name: string | null }, template: (n: string, u: string) => { subject: string; html: string }, column: string, counter: 'e24' | 'e3d' | 'e7d') {
-    if (!user.email) return
-    if (user.email === 'sagarbmw1@gmail.com' || user.email === 'hello@portfolioai.company' || user.email === 'sagar@portfolioai.company') return
-
-    const { data: portfolios } = await supabase
-      .from('portfolios').select('slug').eq('user_id', user.id).limit(1)
-    if (!portfolios?.[0]) return
-
-    const { count: paymentCount } = await supabase
-      .from('payments').select('*', { count: 'exact', head: true }).eq('user_id', user.id)
-    if ((paymentCount || 0) > 0) return
-
-    const name = user.full_name?.split(' ')[0] || 'there'
-    const url = 'https://portfolioai.company/dashboard'
-    const { subject, html } = template(name, url)
-
-    try {
-      await resend.emails.send({
-        from: 'Sagar <hello@portfolioai.company>',
-        replyTo: 'hello@portfolioai.company',
-        to: user.email,
-        subject,
-        html,
-      })
-      await supabase.from('profiles')
-        .update({ [column]: now.toISOString() })
-        .eq('id', user.id)
-      sent[counter]++
-      await new Promise(r => setTimeout(r, 500))
-    } catch (err) {
-      sent.errors.push(counter + ' ' + user.email + ': ' + (err instanceof Error ? err.message : String(err)))
-    }
+  const testTo = url.searchParams.get('test')
+  if (testTo) {
+    const step = Math.min(Math.max(parseInt(url.searchParams.get('step') || '1', 10) || 1, 1), DRIP_LENGTH)
+    const hasPortfolio = url.searchParams.get('portfolio') !== '0'
+    const { subject, html, text } = renderDrip(step, { name: 'Sagar', hasPortfolio, userId: 'test-user' })
+    const res = await resend.emails.send({ from: FROM, replyTo: REPLY_TO, to: testTo, subject, html, text, headers: dripHeaders('test-user') })
+    return NextResponse.json({ test: true, step, to: testTo, error: res.error?.message ?? null, id: res.data?.id ?? null })
   }
 
-  // 24h email: signed up 24-72h ago, no 24h/3d/7d email sent yet
-  const { data: users24h } = await supabase
-    .from('profiles')
-    .select('id, email, full_name')
-    .lt('created_at', h24)
-    .gt('created_at', h72)
-    .is('email_24h_sent', null)
-    .is('email_3d_sent', null)
-    .is('email_7d_sent', null)
-    .limit(50)
-  for (const u of users24h || []) await sendEmail(u, email24h, 'email_24h_sent', 'e24')
-
-  // 3d email: signed up 72-168h ago, no 3d/7d sent yet (may have gotten 24h)
-  const { data: users3d } = await supabase
-    .from('profiles')
-    .select('id, email, full_name')
-    .lt('created_at', h72)
-    .gt('created_at', h168)
-    .is('email_3d_sent', null)
-    .is('email_7d_sent', null)
-    .limit(50)
-  for (const u of users3d || []) await sendEmail(u, email3d, 'email_3d_sent', 'e3d')
-
-  // 7d email: signed up >168h ago, no 7d sent yet
-  const { data: users7d } = await supabase
-    .from('profiles')
-    .select('id, email, full_name')
-    .lt('created_at', h168)
-    .is('email_7d_sent', null)
-    .limit(50)
-  for (const u of users7d || []) await sendEmail(u, email7d, 'email_7d_sent', 'e7d')
-
-  return NextResponse.json({
-    success: true,
-    timestamp: now.toISOString(),
-    sent
-  })
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+  const report = await runDrip({ supabase, resend, dryRun: url.searchParams.get('dry') === '1' })
+  return NextResponse.json({ success: report.errors.length === 0, timestamp: new Date().toISOString(), ...report })
 }
