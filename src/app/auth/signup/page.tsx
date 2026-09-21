@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import GoogleButton from '@/components/auth/GoogleButton'
 import toast from 'react-hot-toast'
 
 export default function SignUpPage() {
@@ -48,6 +49,8 @@ export default function SignUpPage() {
       </div>
 
       <div style={{ width: '100%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(201,169,110,.3), transparent)', marginBottom: 32 }} />
+
+      <GoogleButton />
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
