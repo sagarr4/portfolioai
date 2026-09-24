@@ -397,6 +397,33 @@ OUTPUT: Return ONLY the complete HTML. No explanation. No markdown fences. Start
   // short last section whose observer never fired), without killing
   // the normal animation for elements that work correctly.
   const alwaysOnSafety = `
+<script id="pai-raf-safety">
+// Some generated pages include a custom animation loop (particles, orbiting skill
+// bubbles, canvas effects). If that loop's own code has a bug -- most commonly
+// "reschedule requestAnimationFrame(animate) first, THEN touch something undefined"
+// -- an uncaught error inside it does not stop the loop, so it re-arms itself every
+// ~16ms forever: an ever-growing console error flood and a pegged CPU core/battery
+// drain that never stops until the tab is closed. This wraps requestAnimationFrame so
+// a callback that keeps throwing is warned about once and then simply stopped after a
+// few failed frames, while any callback that behaves normally (the vast majority) is
+// completely unaffected. Placed before the page's own scripts run.
+(function() {
+  var nativeRAF = window.requestAnimationFrame.bind(window)
+  var failCounts = new WeakMap()
+  var warned = new WeakSet()
+  window.requestAnimationFrame = function(cb) {
+    if (typeof cb !== 'function') return nativeRAF(cb)
+    if ((failCounts.get(cb) || 0) >= 3) return 0
+    return nativeRAF(function(t) {
+      try { cb(t) }
+      catch (e) {
+        failCounts.set(cb, (failCounts.get(cb) || 0) + 1)
+        if (!warned.has(cb)) { warned.add(cb); console.warn('[PortfolioAI] an animation stopped itself after repeated errors:', e) }
+      }
+    })
+  }
+})();
+</script>
 <style id="pai-forced-global-safety">
 @media (max-width: 900px) {
   #pai-nav-links { display: none !important; }
