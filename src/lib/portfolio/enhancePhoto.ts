@@ -95,7 +95,8 @@ async function generativeRetouch(imageBuffer: Buffer, mimeType: string, hueFamil
       'prompt',
       `Professional studio headshot retouch. Keep this exact person's face, ` +
       `identity, and expression completely unchanged -- do not alter their ` +
-      `features in any way. Apply professional studio lighting: soft, even, ` +
+      `facial features, bone structure, skin tone, hair color/style, or ` +
+      `expression in any way. Apply professional studio lighting: soft, even, ` +
       `flattering. Replace the background entirely with a smooth, softly lit ` +
       `studio backdrop in the ${hueFamily} color family, subtly gradiented, ` +
       `editorial-magazine quality. If the subject's current clothing is ` +
@@ -103,11 +104,25 @@ async function generativeRetouch(imageBuffer: Buffer, mimeType: string, hueFamil
       `replace it with simple, professional business-appropriate attire -- ` +
       `a blazer, button-up shirt, or similar -- in a neutral, tasteful color ` +
       `that complements the backdrop. If they are already wearing ` +
-      `business-appropriate clothing, leave it as-is. Never alter their ` +
-      `face, skin tone, body shape, hair, or expression -- only the ` +
-      `background and, where genuinely casual, the clothing. The result ` +
-      `must remain fully and clearly recognizable as the exact same person, ` +
-      `just professionally lit, dressed, and composed.`
+      `business-appropriate clothing, leave it as-is. If the subject is ` +
+      `wearing sunglasses or any dark/heavily tinted eyewear, remove them ` +
+      `entirely and generate their actual eyes open and looking naturally ` +
+      `at the camera, matching their apparent age, ethnicity, and the ` +
+      `visible parts of their face -- never leave dark or opaque lenses in ` +
+      `the final image. If the subject is wearing a hat, cap, beanie, or ` +
+      `other headwear, remove it entirely and generate a natural hairline ` +
+      `and hair on top that matches the color, texture, and style of ` +
+      `whatever hair is visible at the sides or back -- if no hair is ` +
+      `visible at all, generate a short, neat, professional hairstyle in a ` +
+      `plausible natural hair color for that person. Clear prescription-style ` +
+      `glasses with lightly tinted or see-through lenses that do not hide ` +
+      `the eyes are normal professional attire and should be left as-is. ` +
+      `Never alter their underlying facial identity, skin tone, or ` +
+      `expression -- only the background, clothing where genuinely casual, ` +
+      `and any sunglasses or headwear as instructed above. The result must ` +
+      `remain fully and clearly recognizable as the exact same person, just ` +
+      `professionally lit, dressed, and composed, with their eyes and hair ` +
+      `now visible.`
     )
     formData.append('quality', 'medium')
     formData.append('size', '1024x1024')
