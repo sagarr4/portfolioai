@@ -37,7 +37,7 @@ export async function POST(request, { params }) {
     const seed = portfolio.seed ?? (new Date(portfolio.created_at).getTime() % 10000)
     const photoUrl = portfolio.photo_enhanced_url || portfolio.photo_original_url || undefined
     const htmlContent = await generatePortfolioHTML(parsed, { seed, photoUrl })
-    const watermark = `<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;"><span style="font-size:13px;color:rgba(245,240,232,.6);">Preview only, <strong style="color:#c9a96e;">Launch for $4.99</strong> to share</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:8px 20px;border-radius:3px;font-size:13px;font-weight:600;text-decoration:none;">Launch now</a></div><!-- end watermark -->`
+    const watermark = `<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;"><span style="font-size:13px;color:rgba(245,240,232,.6);">Preview only, <strong style="color:#c9a96e;">Launch for $9.99</strong> to share</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:8px 20px;border-radius:3px;font-size:13px;font-weight:600;text-decoration:none;">Launch now</a></div><!-- end watermark -->`
     const html = htmlContent.includes('</body>') ? htmlContent.replace('</body>', watermark + '</body>') : htmlContent + watermark
 
     await supabase.from('portfolios')

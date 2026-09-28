@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { applyBlurGate } from '@/lib/portfolio/blurGate'
+import { applyServeFixes } from '@/lib/portfolio/serveFixes'
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -23,9 +24,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     return new NextResponse('Portfolio not found', { status: 404 })
   }
 
-  let html = data.html_content
-  // strip em dashes from generated content
-  html = html.split('—').join(',').split('–').join(',')
+  // Serve-time clean-up (dashes, opacity, footer year, stale preview bars, reveal fix).
+  // See src/lib/portfolio/serveFixes.ts. Applies to every portfolio, old and new.
+  let html = applyServeFixes(data.html_content)
   const portfolioId = data.id
 
   // Check if viewer is the owner (logged in as same user)
@@ -38,7 +39,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     }
   } catch {}
 
-  html = html.split('opacity:0').join('opacity:1')
   html = html.split('visibility:hidden').join('visibility:visible')
 
   // PAID - show full clean version

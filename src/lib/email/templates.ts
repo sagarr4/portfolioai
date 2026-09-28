@@ -20,7 +20,7 @@ export function email24h(name: string, portfolioUrl: string) {
             You uploaded your resume yesterday and our AI built you a world-class portfolio website. But it's still locked in preview mode.
           </p>
           <p style="font-size:16px;color:rgba(245,240,232,.6);line-height:1.65;margin:0 0 32px;font-weight:300;">
-            For <strong style="color:#c9a96e;">just $4.99</strong>, less than a coffee, you can:
+            For <strong style="color:#c9a96e;">just $9.99</strong>, about the price of lunch, you can:
           </p>
           <ul style="font-size:15px;color:rgba(245,240,232,.7);line-height:1.9;margin:0 0 36px;padding-left:20px;">
             <li>Launch it as a public URL forever</li>
@@ -31,7 +31,7 @@ export function email24h(name: string, portfolioUrl: string) {
           <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
             <tr><td style="background:#c9a96e;border-radius:4px;">
               <a href="${portfolioUrl}" style="display:inline-block;padding:16px 32px;color:#0c0a08;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:.02em;">
-                Launch my portfolio → $4.99
+                Launch my portfolio → $9.99
               </a>
             </td></tr>
           </table>
@@ -78,7 +78,7 @@ export function email3d(name: string, portfolioUrl: string) {
           <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
             <tr><td style="background:#c9a96e;border-radius:4px;">
               <a href="${portfolioUrl}" style="display:inline-block;padding:16px 32px;color:#0c0a08;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:.02em;">
-                Launch now → $4.99
+                Launch now → $9.99
               </a>
             </td></tr>
           </table>
@@ -117,7 +117,7 @@ export function email7d(name: string, portfolioUrl: string) {
             One week ago you uploaded your resume. The AI built you a world-class portfolio. It's still sitting there, unused.
           </p>
           <p style="font-size:16px;color:rgba(245,240,232,.6);line-height:1.65;margin:0 0 32px;font-weight:300;">
-            <strong style="color:#c9a96e;">$4.99 to launch it.</strong> That's it. No subscription. No catch.
+            <strong style="color:#c9a96e;">$9.99 to launch it.</strong> That's it. No subscription. No catch.
           </p>
           <p style="font-size:16px;color:rgba(245,240,232,.7);line-height:1.65;margin:0 0 36px;font-weight:400;font-style:italic;">
             "I got a recruiter message 8 hours after launching.", recent user
@@ -125,7 +125,7 @@ export function email7d(name: string, portfolioUrl: string) {
           <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
             <tr><td style="background:#c9a96e;border-radius:4px;">
               <a href="${portfolioUrl}" style="display:inline-block;padding:16px 32px;color:#0c0a08;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:.02em;">
-                Launch my portfolio → $4.99
+                Launch my portfolio → $9.99
               </a>
             </td></tr>
           </table>

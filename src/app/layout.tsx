@@ -95,7 +95,7 @@ export default function RootLayout({
           ],
           "offers": {
             "@type": "Offer",
-            "price": "4.99",
+            "price": "9.99",
             "priceCurrency": "USD",
             "priceValidUntil": "2027-12-31",
             "availability": "https://schema.org/InStock",

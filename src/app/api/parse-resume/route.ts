@@ -10,7 +10,7 @@ import { processPhoto } from '@/lib/portfolio/enhancePhoto'
 import { pickHueFamily } from '@/lib/portfolio/theme'
 import { NextResponse } from 'next/server'
 
-const WATERMARK = '<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;gap:16px;"><span style="font-size:13px;color:rgba(245,240,232,.7);">Preview only, <strong style="color:#c9a96e;font-weight:600;">Launch for $4.99</strong> to share</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:9px 22px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;">Launch now</a></div><!-- end watermark -->'
+const WATERMARK = '<!-- watermark --><div id="portfolioai-watermark" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(12,10,8,.96);border-top:1px solid rgba(201,169,110,.2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;gap:16px;"><span style="font-size:13px;color:rgba(245,240,232,.7);">Preview only, <strong style="color:#c9a96e;font-weight:600;">Launch for $9.99</strong> to share</span><a href="/pricing" style="background:#c9a96e;color:#0c0a08;padding:9px 22px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;">Launch now</a></div><!-- end watermark -->'
 
 export async function POST(request: Request) {
   const t0 = Date.now()
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         if (!hasAnyPayment) {
           return NextResponse.json({
             error: 'PAYMENT_REQUIRED',
-            message: 'Launch your first portfolio for $4.99 before creating another one.',
+            message: 'Launch your first portfolio for $9.99 before creating another one.',
           }, { status: 402 })
         }
 
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
         if ((portfolioCount || 0) >= maxAllowed) {
           return NextResponse.json({
             error: 'PAYMENT_REQUIRED',
-            message: 'Launch this portfolio for $4.99 to create another one.',
+            message: 'Launch this portfolio for $9.99 to create another one.',
           }, { status: 402 })
         }
       }

@@ -24,11 +24,11 @@ function emailTemplate(name: string) {
           
           <p style="margin:0 0 16px;">Your portfolio is still sitting in preview mode. I am trying to hit my first 10 paying customers this week and was hoping you would help me out.</p>
           
-          <p style="margin:0 0 16px;"><strong>$4.99 one time</strong>, no subscription. You get a live URL forever, no watermark, no expiry. Less than a coffee.</p>
+          <p style="margin:0 0 16px;"><strong>$9.99 one time</strong>, no subscription. You get a live URL forever, no watermark, no expiry. About the price of lunch.</p>
           
           <p style="margin:0 0 24px;">
             <a href="https://portfolioai.company/dashboard" style="display:inline-block;background:#c9a96e;color:#1a1a1a;padding:14px 28px;border-radius:4px;font-weight:600;text-decoration:none;font-size:15px;">
-              Publish my portfolio — $4.99
+              Publish my portfolio for $9.99
             </a>
           </p>
           
